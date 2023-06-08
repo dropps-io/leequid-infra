@@ -1,0 +1,6 @@
+.terraform/
+.idea
+terraform.d
+kube_config_cluster.yml
+cluster.rkstate
+rke_cluster.yaml
