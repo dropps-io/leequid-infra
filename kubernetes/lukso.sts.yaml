@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: lukso
+  labels:
+    app: lukso
+  annotations: {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lukso
+  template:
+    metadata:
+      labels:
+        app: lukso
+    spec:
+      containers:
+      - name: lukso
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lukso
+  labels:
+    app: lukso
+spec:
+  selector:
+    app: lukso
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
