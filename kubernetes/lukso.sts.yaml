@@ -1,26 +1,93 @@
+# https://github.com/lukso-network/network-docker-containers/blob/main/docker-compose.yml
+# https://geth.ethereum.org/docs/fundamentals/command-line-options
+# https://github.com/ethereum/go-ethereum
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: lukso
   labels:
     app: lukso
+    network: testnet
   annotations: {}
 spec:
   replicas: 1
+  serviceName: lukso
   selector:
     matchLabels:
       app: lukso
+      network: testnet
   template:
     metadata:
       labels:
         app: lukso
+        network: testnet
     spec:
       containers:
       - name: lukso
         image: nginx
         ports:
-        - containerPort: 80
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        env:
+          # https://github.com/lukso-network/network-docker-containers/blob/main/.env.example
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: FEE_RECIPIENT
+            value: "0x859aC430475116A70E022860E44847bEB4ff8159"
+#          - name: EXTERNAL_IP
+#            value: "0.0.0.0"
+          - name: PRYSM_VERBOSITY
+            value: "debug"
+
+          # These values can be found in https://github.com/lukso-network/network-configs/blob/main/mainnet/geth/geth.toml
+          - name: PRYSM_BOOTSTRAP_NODE
+            value: "enr:-MK4QHdcy0ljlcSOPBGd2ydCh0-Rd-rRKqExylHiKunbJC3eI3DKSh4fGNM4pDnNYNvRu-9llVB1pMXloywn4XzVWhWGAYgmkP7yh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDcUbERQgAABKQfAAAAAAAAgmlkgnY0gmlwhCKTScGJc2VjcDI1NmsxoQJNpNUERqKhA8eDDC4tovG3a59NXVOW16JDFAWXoFFTEYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A"
+          - name: EXECUTION_BOOTSTRAP_NODE_1
+            value: "enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@34.147.73.193:30303"
+          - name: EXECUTION_BOOTSTRAP_NODE_2
+            value: "enode://276f14e4049840a0f5aa5e568b772ab6639251149a52ba244647277175b83f47b135f3b3d8d846cf81a8e681684e37e9fc10ec205a9841d3ae219aa08aa9717b@34.32.192.211:30303"
+
+          # SECRETS
+          - name: ETH_STATS_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: lukso
+                key: ETH_STATS_SECRET
+                optional: true
+#        securityContext:
+#          allowPrivilegeEscalation: false
+#          runAsNonRoot: true
         resources: {}
+#      securityContext:
+#        fsGroup: 1000
+#        runAsUser: 1000
+#        runAsGroup: 1000
+        volumeMounts:
+          - name: data
+            mountPath: /data
+#          - name: secrets-xxx
+#            mountPath: /var/run/secrets
+#            readOnly: true
+#      volumes:
+#        - name: secrets-xxx
+#          secret:
+#            secretName: lukso
+#            items:
+#              - key: XXX
+#                path: XXX
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        storageClassName: premium-rwo
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
 ---
 kind: Service
 apiVersion: v1
@@ -28,9 +95,11 @@ metadata:
   name: lukso
   labels:
     app: lukso
+    network: testnet
 spec:
   selector:
     app: lukso
+    network: testnet
   ports:
     - protocol: TCP
       port: 80
