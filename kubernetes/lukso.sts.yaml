@@ -48,11 +48,13 @@ spec:
               mountPath: /data
 
       containers:
+        # EXEC:GETH
         - name: geth
           image: ethereum/client-go:v1.11.6 # latest: v1.12.0
           command: [ "/bin/sh", "-c" ]
           args:
-            - geth --config /configs/geth.toml --ethstats "$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)"
+            - geth --config /configs/geth.toml --ethstats "$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)" 
+              --verbosity 3
           ports:
             - name: http
               containerPort: 8545
@@ -85,12 +87,12 @@ spec:
   #        securityContext:
   #          allowPrivilegeEscalation: false
   #          runAsNonRoot: true
-          resources:
-            requests:
-              cpu: 50m
-              memory: 8Gi
-            limits:
-              memory: 8Gi
+#          resources:
+#            requests:
+#              cpu: 50m
+#              memory: 8Gi
+#            limits:
+#              memory: 8Gi
           volumeMounts:
             - name: data
               mountPath: /data
@@ -100,10 +102,33 @@ spec:
             - name: secrets
               mountPath: /var/run/secrets
               readOnly: true
+
+        # CONSENSUS:PRYSM (BEACON CHAIN)
+        - name: beacon
+#          image: prysmaticlabs/prysm-beacon-chain:latest-alpine
+          image: prysmaticlabs/prysm-beacon-chain:latest
+#          command: [ "/bin/sh" ]
+#          args: [ "-c", "while true; do echo hello; sleep 10;done" ]
+#          command: [ "/bin/sh", "-c" ]
+          args:
+            - --verbosity info --config-file /configs/prysm.yaml
+#            - --config-file /configs/prysm.yaml --verbosity info
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: prysm-conf
+              mountPath: /configs
+              readOnly: true
+            - name: secrets
+              mountPath: /var/run/secrets
+              readOnly: true
       volumes:
         - name: geth-conf
           configMap:
             name: geth-conf
+        - name: prysm-conf
+          configMap:
+            name: prysm-conf
         - name: secrets
           secret:
             secretName: lukso
