@@ -48,13 +48,13 @@ spec:
               mountPath: /data
 
       containers:
-        # EXEC:GETH
+        ## EXEC:GETH
         - name: geth
           image: ethereum/client-go:v1.11.6 # latest: v1.12.0
           command: [ "/bin/sh", "-c" ]
           args:
-            - geth --config /configs/geth.toml --ethstats "$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)" 
-              --verbosity 3
+            - geth --config /configs/geth.toml --ethstats "$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)"
+              --verbosity 2
           ports:
             - name: http
               containerPort: 8545
@@ -103,16 +103,12 @@ spec:
               mountPath: /var/run/secrets
               readOnly: true
 
-        # CONSENSUS:PRYSM (BEACON CHAIN)
+        ## CONSENSUS:PRYSM (BEACON CHAIN)
         - name: beacon
-#          image: prysmaticlabs/prysm-beacon-chain:latest-alpine
-          image: prysmaticlabs/prysm-beacon-chain:latest
-#          command: [ "/bin/sh" ]
-#          args: [ "-c", "while true; do echo hello; sleep 10;done" ]
-#          command: [ "/bin/sh", "-c" ]
+          image: prysmaticlabs/prysm-beacon-chain:v4.0.5
           args:
-            - --verbosity info --config-file /configs/prysm.yaml
-#            - --config-file /configs/prysm.yaml --verbosity info
+            - --config-file=/configs/prysm.yaml
+            - --verbosity=warn
           volumeMounts:
             - name: data
               mountPath: /data
