@@ -67,7 +67,7 @@ spec:
           command: [ "/bin/sh", "-c" ]
           args:
             - geth --config /configs/geth.toml --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)"
-              --verbosity 3
+              --verbosity 2
           ports:
             - name: http
               containerPort: 8545
@@ -120,7 +120,7 @@ spec:
           image: prysmaticlabs/prysm-beacon-chain:v4.0.5
           args:
             - --config-file=/configs/prysm-beacon.yaml
-            - --verbosity=info
+            - --verbosity=warn
           volumeMounts:
             - name: data
               mountPath: /data
@@ -136,7 +136,7 @@ spec:
           image: prysmaticlabs/prysm-validator:v4.0.5
           args:
             - --config-file=/configs/prysm-validator.yaml
-            - --verbosity=info
+            - --verbosity=warn
           volumeMounts:
             - name: data
               mountPath: /data
