@@ -24,16 +24,12 @@ spec:
     spec:
       initContainers:
         - name: network-init
-          image: busybox
-          command: ["/bin/sh", "-c"]
+          image: google/cloud-sdk:434.0.0-alpine
+          command: [ "/bin/sh", "-c" ]
           args:
             - |
-              url=https://raw.githubusercontent.com/lukso-network/network-configs/main/testnet/shared
-              dir=/data/network-configs
-              mkdir -p $dir
-              wget -O ${dir}/config.yaml ${url}/config.yaml
-              wget -O ${dir}/genesis.json ${url}/genesis.json
-              wget -O ${dir}/genesis.ssz ${url}/genesis.ssz
+              gsutil -m cp -r gs://leequid-prod-lukso/testnet/keystores /data
+              gsutil -m cp -r gs://leequid-prod-lukso/testnet/network-configs /data
           volumeMounts:
             - name: data
               mountPath: /data
@@ -46,10 +42,28 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+#
+        - name: prysm-validator-init
+          image: prysmaticlabs/prysm-validator:v4.0.3
+          args:
+            - accounts
+            - import
+            - --keys-dir=/data/keystores
+            - --wallet-dir=/data/keystores/prysm
+            - --wallet-password-file=/var/run/secrets/WALLET_SECRET
+            - --account-password-file=/var/run/secrets/ACCOUNT_SECRET
+            - --accept-terms-of-use
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: secrets
+              mountPath: /var/run/secrets
+              readOnly: true
 
       containers:
         ## EXEC:GETH
-        - name: geth
+        - name: exec
+#          image: nginx
           image: ethereum/client-go:v1.11.6 # latest: v1.12.0
           command: [ "/bin/sh", "-c" ]
           args:
@@ -107,8 +121,23 @@ spec:
         - name: beacon
           image: prysmaticlabs/prysm-beacon-chain:v4.0.5
           args:
-            - --config-file=/configs/prysm.yaml
+            - --config-file=/configs/prysm-beacon.yaml
             - --verbosity=warn
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: prysm-conf
+              mountPath: /configs
+              readOnly: true
+            - name: secrets
+              mountPath: /var/run/secrets
+              readOnly: true
+        ## VALIDATOR:PRYSM
+        - name: validator
+          image: prysmaticlabs/prysm-validator:v4.0.5
+          args:
+            - --config-file=/configs/prysm-validator.yaml
+            - --verbosity=info
           volumeMounts:
             - name: data
               mountPath: /data
@@ -128,9 +157,7 @@ spec:
         - name: secrets
           secret:
             secretName: lukso
-            items:
-              - key: JWT_SECRET
-                path: JWT_SECRET
+
 #      securityContext:
 #        fsGroup: 1000
 #        runAsUser: 1000

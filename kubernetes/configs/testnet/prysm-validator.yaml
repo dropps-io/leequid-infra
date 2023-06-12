@@ -1,0 +1,12 @@
+# https://docs.prylabs.network/docs/prysm-usage/parameters#validator-flags
+
+datadir: '/data/validator_data'
+chain-config-file: '/data/network-configs/config.yaml'
+wallet-dir: '/data/keystores/prysm'
+wallet-password-file: '/var/run/secrets/WALLET_SECRET'
+suggested-fee-recipient: '0x859aC430475116A70E022860E44847bEB4ff8159'
+
+monitoring-host: '0.0.0.0'
+grpc-gateway-host: '0.0.0.0'
+rpc-host: '0.0.0.0'
+accept-terms-of-use: true
