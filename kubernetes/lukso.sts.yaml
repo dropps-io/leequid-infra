@@ -132,9 +132,6 @@ spec:
             - name: lukso-conf
               mountPath: /configs
               readOnly: true
-#            - name: secrets
-#              mountPath: /var/run/secrets
-#              readOnly: true
           resources:
             requests:
               memory: 6Gi
