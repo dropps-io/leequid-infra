@@ -204,7 +204,7 @@ data:
     jwt-secret: '/data/execution_data/geth/jwtsecret'
     wallet-dir: '/data/keystores/prysm'
     wallet-password-file: '/var/run/secrets/WALLET_SECRET'
-    suggested-fee-recipient: '0x859aC430475116A70E022860E44847bEB4ff8159'
+    suggested-fee-recipient: '0xD692Ba892a902810a2EE3fA41C1D8DcD652D47Ab'
     
     min-sync-peers: 0
     monitoring-host: '0.0.0.0'

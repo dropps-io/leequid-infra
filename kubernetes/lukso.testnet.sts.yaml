@@ -18,7 +18,7 @@ metadata:
     app: lukso
   annotations: {}
 spec:
-  replicas: 1
+  replicas: 2
   serviceName: lukso
   selector:
     matchLabels:
@@ -29,42 +29,62 @@ spec:
         app: lukso
     spec:
       initContainers:
-        - name: network-init
-          image: google/cloud-sdk:434.0.0-alpine
-          command: [ "/bin/sh", "-c" ]
+        - name: init
+          image: europe-west1-docker.pkg.dev/leequid/leequid/init
+          command: [ "/bin/bash", "-c" ]
           args:
             - |
-              gsutil -m cp -r gs://leequid-prod-lukso/testnet/keystores /data
-              gsutil -m cp -r gs://leequid-prod-lukso/testnet/network-configs /data
-          volumeMounts:
-            - name: data
-              mountPath: /data
-
-        - name: geth-init
-          image: ethereum/client-go:v1.11.6
-          command: ["/bin/sh", "-c"]
-          args:
-            - geth --datadir=/data/execution_data init /data/network-configs/genesis.json
-          volumeMounts:
-            - name: data
-              mountPath: /data
-
-        - name: prysm-validator-init
-          image: prysmaticlabs/prysm-validator:v4.0.3
-          args:
-            - accounts
-            - import
-            - --keys-dir=/data/keystores
-            - --wallet-dir=/data/keystores/prysm
-            - --wallet-password-file=/var/run/secrets/WALLET_SECRET
-            - --account-password-file=/var/run/secrets/ACCOUNT_SECRET
-            - --accept-terms-of-use
+              #!/bin/bash
+              set -e
+              
+              [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://leequid-prod-lukso/$NETWORK/network-configs /data
+              [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
+              
+              if [ ! -d "/data/wallet/prysm" ]; then
+                echo -e "\n>>> Generate keystore and mnemonic [num_validators=$VALIDATOR_PER_NODE]"
+                lukso-key-gen-cli --language English new-mnemonic --mnemonic_language English --chain lukso \
+                  --num_validators $VALIDATOR_PER_NODE \
+                  --keystore_password $(cat /var/run/secrets/WALLET_SECRET) \
+                  --folder /tmp \
+                  --mnemonic_file /tmp/mnemonic.txt
+                
+                echo -e "\n>>> Import validator accounts"
+                validator accounts import \
+                  --keys-dir=/tmp/validator_keys \
+                  --wallet-dir=/data/wallet/prysm \
+                  --wallet-password-file=/var/run/secrets/WALLET_SECRET \
+                  --account-password-file=/var/run/secrets/WALLET_SECRET \
+                  --accept-terms-of-use
+              
+                echo -e "\n>>> Save deposit_data.json to bucket"
+                gsutil -m cp /tmp/validator_keys/deposit_data* gs://$BUCKET/$NETWORK/deposit/${NODE_NAME}-deposit-data.json
+                
+                echo -e "\n>>> Create secret for mnemonic"
+                gcloud secrets create ${ENV}-${NETWORK}-${NODE_NAME}-mnemonic --data-file=/tmp/mnemonic.txt
+              
+                echo -e "\n>>> Remove keystore and mnemonic"
+                rm -rf /tmp/mnemonic.txt /tmp/validator_keys
+              fi
+              
+              echo "Init Success"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: VALIDATOR_PER_NODE
+              value: "2"
+            - name: NETWORK
+              value: "testnet"
+            - name: ENV
+              value: "prod"
+            - name: BUCKET
+              value: "leequid-prod-lukso"
           volumeMounts:
             - name: data
               mountPath: /data
             - name: secrets
               mountPath: /var/run/secrets
-              readOnly: true
 
       containers:
         ## EXEC:GETH
@@ -215,9 +235,12 @@ data:
     chain-config-file: '/data/network-configs/config.yaml'
     genesis-state: '/data/network-configs/genesis.ssz'
     jwt-secret: '/data/execution_data/geth/jwtsecret'
-    wallet-dir: '/data/keystores/prysm'
+    wallet-dir: '/data/wallet/prysm'
     wallet-password-file: '/var/run/secrets/WALLET_SECRET'
     suggested-fee-recipient: '0x859aC430475116A70E022860E44847bEB4ff8159'
+    
+    checkpoint-sync-url: https://checkpoints.testnet.lukso.network
+    genesis-beacon-api-url: https://checkpoints.testnet.lukso.network
     
     min-sync-peers: 0
     monitoring-host: '0.0.0.0'
