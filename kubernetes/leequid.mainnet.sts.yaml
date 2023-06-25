@@ -1,21 +1,24 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: lukso
+  name: leequid
   namespace: mainnet
   labels:
-    app: lukso
+    app: leequid
+    chain: lukso
   annotations: {}
 spec:
   replicas: 2
-  serviceName: lukso
+  serviceName: leequid
   selector:
     matchLabels:
-      app: lukso
+      app: leequid
+      chain: lukso
   template:
     metadata:
       labels:
-        app: lukso
+        app: leequid
+        chain: lukso
     spec:
       initContainers:
         - name: network-init
@@ -93,13 +96,13 @@ spec:
             - name: ETH_STATS_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: lukso
+                  name: leequid
                   key: ETH_STATS_SECRET
                   optional: true
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: lukso-conf
+            - name: conf
               mountPath: /configs
               readOnly: true
             - name: secrets
@@ -121,7 +124,7 @@ spec:
 #          volumeMounts:
 #            - name: data
 #              mountPath: /data
-#            - name: lukso-conf
+#            - name: conf
 #              mountPath: /configs
 #              readOnly: true
 #          resources:
@@ -140,7 +143,7 @@ spec:
 #          volumeMounts:
 #            - name: data
 #              mountPath: /data
-#            - name: lukso-conf
+#            - name: conf
 #              mountPath: /configs
 #              readOnly: true
 #            - name: secrets
@@ -153,15 +156,18 @@ spec:
 #              memory: 4Gi
 
       volumes:
-        - name: lukso-conf
+        - name: conf
           configMap:
-            name: lukso-conf
+            name: leequid
         - name: secrets
           secret:
-            secretName: lukso
+            secretName: leequid
   volumeClaimTemplates:
     - metadata:
         name: data
+        labels:
+          app: leequid
+          chain: lukso
       spec:
         storageClassName: premium-rwo
         accessModes:
@@ -173,8 +179,11 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lukso-conf
+  name: leequid
   namespace: mainnet
+  labels:
+    app: leequid
+    chain: lukso
 data:
   geth.toml: |
     [Eth]

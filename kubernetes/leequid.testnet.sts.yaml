@@ -12,21 +12,24 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: lukso
+  name: leequid
   namespace: testnet
   labels:
-    app: lukso
+    app: leequid
+    chain: lukso
   annotations: {}
 spec:
   replicas: 2
-  serviceName: lukso
+  serviceName: leequid
   selector:
     matchLabels:
-      app: lukso
+      app: leequid
+      chain: lukso
   template:
     metadata:
       labels:
-        app: lukso
+        app: leequid
+        chain: lukso
     spec:
       initContainers:
         - name: init
@@ -37,7 +40,7 @@ spec:
               #!/bin/bash
               set -e
               
-              [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://leequid-prod-lukso/$NETWORK/network-configs /data
+              [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
               [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
               
               if [ ! -d "/data/wallet/prysm" ]; then
@@ -119,7 +122,7 @@ spec:
             - name: ETH_STATS_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: lukso
+                  name: leequid
                   key: ETH_STATS_SECRET
                   optional: true
   #        securityContext:
@@ -128,7 +131,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: lukso-conf
+            - name: conf
               mountPath: /configs
               readOnly: true
             - name: secrets
@@ -150,7 +153,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: lukso-conf
+            - name: conf
               mountPath: /configs
               readOnly: true
 #          resources:
@@ -169,7 +172,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: lukso-conf
+            - name: conf
               mountPath: /configs
               readOnly: true
             - name: secrets
@@ -182,12 +185,12 @@ spec:
 #              memory: 4Gi
 
       volumes:
-        - name: lukso-conf
+        - name: conf
           configMap:
-            name: lukso-conf
+            name: leequid
         - name: secrets
           secret:
-            secretName: lukso
+            secretName: leequid
 #      securityContext:
 #        fsGroup: 1000
 #        runAsUser: 1000
@@ -195,6 +198,9 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        labels:
+          app: leequid
+          chain: lukso
       spec:
         storageClassName: premium-rwo
         accessModes:
@@ -206,8 +212,11 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lukso-conf
+  name: leequid
   namespace: testnet
+  labels:
+    app: leequid
+    chain: lukso
 data:
   geth.toml: |
     [Eth]
@@ -260,12 +269,14 @@ data:
 #kind: Service
 #apiVersion: v1
 #metadata:
-#  name: lukso
+#  name: leequid
 #  labels:
-#    app: lukso
+#    app: leequid
+#    chain: lukso
 #spec:
 #  selector:
-#    app: lukso
+#    app: leequid
+#    chain: lukso
 #  ports:
 #    - protocol: TCP
 #      port: 80
