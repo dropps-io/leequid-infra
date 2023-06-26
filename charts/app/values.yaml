@@ -10,11 +10,14 @@ image:
 
 imagePullSecrets: []
 
-env:
-  PORT: 3000
+#command: {}
 
-secrets:
-  TOKEN: leequid
+#args: {}
+
+env:
+  PORT: "{{ .Values.service.port }}"
+
+secrets: {}
 
 serviceAccount:
   create: true
@@ -22,6 +25,8 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
+
+labels: {}
 
 service:
   type: ClusterIP
@@ -43,12 +48,24 @@ ingress:
 
 resources: {}
 
+probes:
+#  initialDelaySeconds: 0
+#  failureThreshold: 3
+#  periodSeconds: 10
+#  timeoutSeconds: 1
+#  successThreshold: 1
+  httpGet:
+    path: /
+    port: http
+
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 4
+  scaleDownStabilizationWindowSeconds: 300
+  scaleUpStabilizationWindowSeconds: 0
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 podSecurityContext: {}
 # fsGroup: 2000
