@@ -35,7 +35,9 @@ Common labels
 */}}
 {{- define "app.labels" -}}
 helm.sh/chart: {{ include "app.chart" . }}
-{{- toYaml .Values.labels }}
+{{ with .Values.labels }}
+  {{- toYaml . }}
+{{- end }}
 {{ include "app.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

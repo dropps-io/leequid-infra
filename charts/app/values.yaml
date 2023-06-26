@@ -20,7 +20,7 @@ env:
 secrets: {}
 
 serviceAccount:
-  create: true
+  create: false
   annotations: {}
   name: ""
 
