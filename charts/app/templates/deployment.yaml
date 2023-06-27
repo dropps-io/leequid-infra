@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ ternary "StatefulSet" "Deployment" .Values.statefulset }}
 metadata:
   name: {{ include "app.fullname" . }}
   labels:
@@ -7,6 +7,9 @@ metadata:
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  {{- if .Values.statefulset }}
+  serviceName: {{ include "app.fullname" . }}
   {{- end }}
   selector:
     matchLabels:
@@ -43,6 +46,10 @@ spec:
           {{- end }}
           {{- if or .Values.env .Values.secrets }}
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
               value: {{ tpl (quote $value) $ }}

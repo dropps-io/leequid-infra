@@ -3,6 +3,8 @@ nameOverride: ""
 
 replicaCount: 1
 
+statefulset: false
+
 image:
   repository: europe-west1-docker.pkg.dev/leequid/leequid/back
   tag: main
@@ -11,6 +13,8 @@ image:
 imagePullSecrets: []
 
 #command: {}
+
+#args: {}
 
 env:
   PORT: "{{ .Values.service.port }}"
@@ -29,7 +33,7 @@ labels: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 4000
 
 ingress:
   enabled: false
@@ -45,7 +49,12 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  requests:
+    memory: 512Mi
+  limits:
+    memory: 512Mi
+
 
 probes:
 #  initialDelaySeconds: 0

@@ -1,6 +1,8 @@
 fullnameOverride: oracle
 
-replicaCount: 1
+replicaCount: 2
+
+statefulset: true
 
 env:
   GCP_BUCKET_NAME: leequid-prod-lukso
@@ -9,5 +11,3 @@ env:
 
 secrets:
   ORACLE_PRIVATE_KEY: leequid
-
-# TODO: Service Headless

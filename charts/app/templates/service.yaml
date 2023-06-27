@@ -6,6 +6,7 @@ metadata:
     {{- include "app.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: {{ ternary "None" "" .Values.statefulset }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
