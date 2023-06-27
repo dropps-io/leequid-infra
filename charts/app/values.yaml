@@ -12,10 +12,9 @@ imagePullSecrets: []
 
 #command: {}
 
-#args: {}
-
 env:
   PORT: "{{ .Values.service.port }}"
+  RPC_URL: https://rpc.testnet.lukso.network
 
 secrets: {}
 
@@ -55,7 +54,7 @@ probes:
 #  timeoutSeconds: 1
 #  successThreshold: 1
   httpGet:
-    path: /
+    path: /healthz
     port: http
 
 autoscaling:

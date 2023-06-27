@@ -1,0 +1,9 @@
+fullnameOverride: orchestrator
+
+env:
+  ORACLES_URLS: http://oracle:80
+
+secrets:
+  ORCHESTRATOR_PRIVATE_KEY: leequid
+
+probes: null

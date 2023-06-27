@@ -1,0 +1,13 @@
+fullnameOverride: oracle
+
+replicaCount: 1
+
+env:
+  GCP_BUCKET_NAME: leequid-prod-lukso
+  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
+  CONSENSUS_API: https://explorer.consensus.testnet.lukso.network/api/v1
+
+secrets:
+  ORACLE_PRIVATE_KEY: leequid
+
+# TODO: Service Headless

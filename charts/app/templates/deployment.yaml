@@ -36,7 +36,11 @@ spec:
           command:
             {{- toYaml .Values.command | nindent 12 }}
           args:
+          {{- if .Values.args }}
             {{- toYaml .Values.args | nindent 12 }}
+          {{- else }}
+            - dist/apps/{{ include "app.fullname" . }}/main.js
+          {{- end }}
           {{- if or .Values.env .Values.secrets }}
           env:
             {{- range $key, $value := .Values.env }}
