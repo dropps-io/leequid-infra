@@ -1,0 +1,79 @@
+#!/bin/bash
+
+set -e
+
+### How to run:
+# bash generate-wallets.sh (node_count=2 and validator_per_node=2)
+# NODE_COUNT=1 bash generate-wallets.sh (node_count=1 and validator_per_node=2)
+# VALIDATOR_PER_NODE=10 bash generate-wallets.sh (node_count=2 and validator_per_node=10)
+# NODE_COUNT=10 VALIDATOR_PER_NODE=1000 bash generate-wallets.sh (node_count=10 and validator_per_node=1000)
+###
+
+PRYSM_VERSION=4.0.3
+SECRET_LENGTH=32
+START_INDEX=${START_INDEX:-0}
+VALIDATOR_PER_NODE=${VALIDATOR_PER_NODE:-2}
+NODE_COUNT=${NODE_COUNT:-2}
+NODE_PREFIX_NAME=${NODE_PREFIX_NAME:-"leequid"}
+NETWORK=${NETWORK:-"mainnet"}
+BUCKET=${BUCKET:-"leequid-prod-staking"}
+ENV=${ENV:-"prod"}
+
+echo -e ">> Create directory [leequid] and download tools [prysm + lukso-key-gen]"
+dir=$NODE_PREFIX_NAME
+mkdir -p $dir
+curl -Ls https://github.com/prysmaticlabs/prysm/releases/download/v$PRYSM_VERSION/validator-v$PRYSM_VERSION-linux-amd64 --output prysm-validator && chmod +x prysm-validator
+curl -LOs https://github.com/percenuage/tools-key-gen-cli/releases/download/lukso-network-pr30/lukso-key-gen-cli && chmod +x lukso-key-gen-cli
+
+echo -e "\n>> Generate random wallet secret [$dir/wallet-password.txt]"
+#WALLET_PASSWORD=$(</dev/urandom tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_{|}~' | head -c $SECRET_LENGTH ; echo)
+WALLET_PASSWORD=$(openssl rand -base64 $SECRET_LENGTH)
+echo $WALLET_PASSWORD > $dir/wallet-password.txt
+
+echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
+gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt
+
+echo -e "\n>> Iterate over [node_count=$NODE_COUNT]"
+for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
+  node_name=${NODE_PREFIX_NAME}-${i}
+  mnemonic_file=${dir}/${node_name}-mnemonic
+  wallet_file=${dir}/${node_name}-wallet.json
+  deposit_file=${dir}/${node_name}-deposit.json
+  deposit_all_file=${dir}/${NODE_PREFIX_NAME}-deposit.json
+
+  echo -e "\n>>> [$node_name] Generate keystore and mnemonic [num_validators=$VALIDATOR_PER_NODE] using lukso-key-gen-cli"
+  ./lukso-key-gen-cli --language English new-mnemonic --mnemonic_language English --chain lukso \
+      --num_validators $VALIDATOR_PER_NODE \
+      --keystore_password $WALLET_PASSWORD \
+      --folder $dir \
+      --mnemonic_file $mnemonic_file
+
+  echo -e "\n>>> [$node_name] Copy deposit to [$deposit_file]"
+  chmod +w $dir/validator_keys/deposit*.json
+  cp $dir/validator_keys/deposit*.json $deposit_file
+
+  echo -e "\n>>> [$node_name] Generate wallet [$dir/wallet] using prysm-validator"
+  ./prysm-validator accounts import \
+    --keys-dir=$dir/validator_keys \
+    --wallet-dir=$dir/wallet \
+    --wallet-password-file=$dir/wallet-password.txt \
+    --account-password-file=$dir/wallet-password.txt \
+    --accept-terms-of-use
+
+  echo -e "\n>>> [$node_name] Copy wallet json file to [$wallet_file]"
+  cp $dir/wallet/direct/accounts/all-accounts.keystore.json $wallet_file
+
+  echo -e "\n>> [$node_name] Save wallet json file to Google Secret [${ENV}-${NETWORK}-${node_name}-wallet-file]"
+  gcloud secrets create ${ENV}-${NETWORK}-${node_name}-wallet-file --data-file=$wallet_file
+
+  rm -rf $dir/validator_keys $dir/wallet
+done
+
+echo -e "\n>> Merge all deposit wallet to [${NODE_PREFIX_NAME}-deposit.json]"
+jq -s 'add' $dir/*deposit.json > $deposit_all_file
+
+echo -e "\n>> Save all deposits to [gs://$BUCKET/$NETWORK/]"
+gsutil -m cp ${dir}/*deposit.json gs://$BUCKET/$NETWORK/
+
+echo -e "\n>> Clean all except mnemonic files"
+rm -rf $dir/*deposit* $dir/*wallet*
