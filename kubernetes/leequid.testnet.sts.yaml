@@ -43,31 +43,12 @@ spec:
               [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
               [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
               
-              if [ ! -d "/data/wallet/prysm" ]; then
-                echo -e "\n>>> Generate keystore and mnemonic [num_validators=$VALIDATOR_PER_NODE]"
-                lukso-key-gen-cli --language English new-mnemonic --mnemonic_language English --chain lukso \
-                  --num_validators $VALIDATOR_PER_NODE \
-                  --keystore_password $(cat /var/run/secrets/WALLET_SECRET) \
-                  --folder /tmp \
-                  --mnemonic_file /tmp/mnemonic.txt
-                
-                echo -e "\n>>> Import validator accounts"
-                validator accounts import \
-                  --keys-dir=/tmp/validator_keys \
-                  --wallet-dir=/data/wallet/prysm \
-                  --wallet-password-file=/var/run/secrets/WALLET_SECRET \
-                  --account-password-file=/var/run/secrets/WALLET_SECRET \
-                  --accept-terms-of-use
+              secret_id=${ENV}-${NETWORK}-leequid-wallet-password
+              gcloud secrets versions access latest --secret $secret_id > /var/run/secrets/WALLET_PASSWORD
               
-                echo -e "\n>>> Save deposit_data.json to bucket"
-                gsutil -m cp /tmp/validator_keys/deposit_data* gs://$BUCKET/$NETWORK/deposit/${NODE_NAME}-deposit-data.json
-                
-                echo -e "\n>>> Create secret for mnemonic"
-                gcloud secrets create ${ENV}-${NETWORK}-${NODE_NAME}-mnemonic --data-file=/tmp/mnemonic.txt
-              
-                echo -e "\n>>> Remove keystore and mnemonic"
-                rm -rf /tmp/mnemonic.txt /tmp/validator_keys
-              fi
+              mkdir -p /data/wallet/prysm/direct/accounts/
+              secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
+              gcloud secrets versions access latest --secret $secret_id > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
               
               echo "Init Success"
           env:
@@ -75,14 +56,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: VALIDATOR_PER_NODE
-              value: "2"
             - name: NETWORK
               value: "testnet"
             - name: ENV
               value: "prod"
             - name: BUCKET
-              value: "leequid-prod-lukso"
+              value: "leequid-prod-staking"
           volumeMounts:
             - name: data
               mountPath: /data
@@ -92,6 +71,7 @@ spec:
       containers:
         ## EXEC:GETH
         - name: exec
+#          image: nginx
           image: ethereum/client-go:v1.11.6
           command: [ "/bin/sh", "-c" ]
           args:
@@ -133,9 +113,6 @@ spec:
               mountPath: /data
             - name: conf
               mountPath: /configs
-              readOnly: true
-            - name: secrets
-              mountPath: /var/run/secrets
               readOnly: true
 #          resources:
 #            requests:
@@ -189,8 +166,7 @@ spec:
           configMap:
             name: leequid
         - name: secrets
-          secret:
-            secretName: leequid
+          emptyDir: {}
 #      securityContext:
 #        fsGroup: 1000
 #        runAsUser: 1000
@@ -245,7 +221,7 @@ data:
     genesis-state: '/data/network-configs/genesis.ssz'
     jwt-secret: '/data/execution_data/geth/jwtsecret'
     wallet-dir: '/data/wallet/prysm'
-    wallet-password-file: '/var/run/secrets/WALLET_SECRET'
+    wallet-password-file: '/var/run/secrets/WALLET_PASSWORD'
     suggested-fee-recipient: '0x859aC430475116A70E022860E44847bEB4ff8159'
     
     checkpoint-sync-url: https://checkpoints.testnet.lukso.network
