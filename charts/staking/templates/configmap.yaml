@@ -9,12 +9,16 @@ data:
     #!/bin/bash
     set -e
 
+    echo -e ">> Get network-configs from Google Storage"
     [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
+    echo -e "\n>> Init Geth"
     [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
 
+    echo -e "\n>> Get WALLET_PASSWORD from Google Secret"
     secret_id=${ENV}-${NETWORK}-leequid-wallet-password
     gcloud secrets versions access latest --secret $secret_id > /var/run/secrets/WALLET_PASSWORD
 
+    echo -e "\n>> Get prysm wallet from Google Secret and set at /data/wallet/prysm/direct/accounts"
     mkdir -p /data/wallet/prysm/direct/accounts/
     secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
     gcloud secrets versions access latest --secret $secret_id > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json

@@ -50,7 +50,7 @@ configmap:
       - '"enode://4cee52dc3cdc0f9466d40354c0ae038b561eff0409f01092d44d692f35797a0f3e796481c5ad1ca9afb4ea00dcceaaddbf3a79ec311221bfad3567ba347e329b@34.91.156.224:30303"'
 
 serviceAccount:
-  create: true
+  create: false
   annotations:
     iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
   name: ""

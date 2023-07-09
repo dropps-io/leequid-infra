@@ -91,8 +91,9 @@ spec:
           volumeMounts:
             - name: {{ .Values.volume.name }}
               mountPath: /data
-            - name: secrets
-              mountPath: /var/run/secrets
+            - name: conf
+              mountPath: /configs
+              readOnly: true
           ports:
             - name: http
               containerPort: 8545
@@ -179,6 +180,7 @@ spec:
         - name: conf
           configMap:
             name: {{ include "staking.fullname" . }}
+            defaultMode: 0500
         - name: secrets
           emptyDir: {}
 
