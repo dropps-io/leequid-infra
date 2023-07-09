@@ -1,0 +1,211 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "staking.fullname" . }}
+  labels:
+    {{- include "staking.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "staking.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "staking.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "staking.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "staking.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init
+          image: {{ .Values.init.image }}
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - /configs/init.sh
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ tpl (quote $value) $ }}
+            {{- end }}
+            {{- range $key, $secret := .Values.secrets }}
+            {{- $secretParts := split "/" $secret }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretParts._0 }}
+                  key: {{ $secretParts._1 | default $key | quote }}
+                  optional: true
+            {{- end }}
+          volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: /data
+            - name: conf
+              mountPath: /configs
+              readOnly: true
+            - name: secrets
+              mountPath: /var/run/secrets
+      containers:
+        ## EXEC:GETH
+        - name: exec
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.exec.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - geth --config /configs/geth.toml
+              --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
+              --verbosity 2
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ tpl (quote $value) $ }}
+              {{- end }}
+              {{- range $key, $secret := .Values.secrets }}
+              {{- $secretParts := split "/" $secret }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretParts._0 }}
+                  key: {{ $secretParts._1 | default $key | quote }}
+                  optional: true
+              {{- end }}
+          volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: /data
+            - name: conf
+              mountPath: /configs
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 8545
+              protocol: TCP
+            - name: ws
+              containerPort: 8546
+              protocol: TCP
+            - name: sync
+              containerPort: 30303
+              protocol: TCP
+            - name: discovery
+              containerPort: 30303
+              protocol: UDP
+          {{- if not .Values.exec.memory }}
+          resources:
+            requests:
+              memory: {{ .Values.exec.memory }}
+            limits:
+              memory: {{ .Values.exec.memory }}
+          {{- end }}
+
+        ## CONSENSUS:PRYSM (BEACON CHAIN)
+        - name: beacon
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.beacon.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --config-file=/configs/prysm.yaml
+            - --datadir=/data/consensus_data
+            - --verbosity=warn
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ tpl (quote $value) $ }}
+            {{- end }}
+          volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: /data
+            - name: conf
+              mountPath: /configs
+              readOnly: true
+          {{- if not .Values.beacon.memory }}
+          resources:
+            requests:
+              memory: {{ .Values.beacon.memory }}
+            limits:
+              memory: {{ .Values.beacon.memory }}
+          {{- end }}
+
+        ## VALIDATOR:PRYSM
+        - name: validator
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.validator.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --config-file=/configs/prysm.yaml
+            - --datadir=/data/validator_data
+            - --verbosity=warn
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ tpl (quote $value) $ }}
+            {{- end }}
+          volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: /data
+            - name: conf
+              mountPath: /configs
+              readOnly: true
+            - name: secrets
+              mountPath: /var/run/secrets
+              readOnly: true
+          {{- if not .Values.validator.memory }}
+          resources:
+            requests:
+              memory: {{ .Values.validator.memory }}
+            limits:
+              memory: {{ .Values.validator.memory }}
+          {{- end }}
+
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ include "staking.fullname" . }}
+            defaultMode: 0500
+        - name: secrets
+          emptyDir: {}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.volume.name }}
+        labels:
+          {{- include "staking.labels" . | nindent 10 }}
+      spec:
+        storageClassName: {{ .Values.volume.storageClassName }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.volume.size }}

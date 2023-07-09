@@ -1,0 +1,93 @@
+fullnameOverride: ""
+nameOverride: ""
+
+replicaCount: 1
+
+statefulset: false
+
+image:
+  repository: europe-west1-docker.pkg.dev/leequid/leequid/back
+  tag: main
+  pullPolicy: Always #Never|Always|IfNotPresent
+
+imagePullSecrets: []
+
+#command: {}
+
+#args: {}
+
+env:
+  PORT: "{{ .Values.service.port }}"
+  RPC_URL: https://rpc.testnet.lukso.network
+
+secrets: {}
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+labels: {}
+
+service:
+  type: ClusterIP
+  port: 4000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  requests:
+    memory: 512Mi
+  limits:
+    memory: 512Mi
+
+
+probes:
+#  initialDelaySeconds: 0
+#  failureThreshold: 3
+#  periodSeconds: 10
+#  timeoutSeconds: 1
+#  successThreshold: 1
+  httpGet:
+    path: /healthz
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 4
+  scaleDownStabilizationWindowSeconds: 300
+  scaleUpStabilizationWindowSeconds: 0
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

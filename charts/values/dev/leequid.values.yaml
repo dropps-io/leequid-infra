@@ -1,0 +1,17 @@
+replicaCount: 1
+
+env:
+  NETWORK: testnet
+  GENESIS: genesis
+
+exec:
+  memory: 2Gi
+
+beacon:
+  memory: 3Gi
+
+validator:
+  memory: 2Gi
+
+volume:
+  size: 20Gi

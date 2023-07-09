@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "staking.fullname" . }}
+  labels:
+    {{- include "staking.labels" . | nindent 4 }}
+data:
+  init.sh: |
+    #!/bin/bash
+    set -e
+
+    echo -e ">> Get network-configs from Google Storage"
+    [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
+    echo -e "\n>> Init Geth"
+    [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
+
+    echo -e "\n>> Get WALLET_PASSWORD from Google Secret"
+    secret_id=${ENV}-${NETWORK}-leequid-wallet-password
+    gcloud secrets versions access latest --secret $secret_id > /var/run/secrets/WALLET_PASSWORD
+
+    echo -e "\n>> Get prysm wallet from Google Secret and set at /data/wallet/prysm/direct/accounts"
+    mkdir -p /data/wallet/prysm/direct/accounts/
+    secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
+    gcloud secrets versions access latest --secret $secret_id > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
+
+    echo "Init Success"
+  geth.toml: |
+    [Eth]
+    NetworkId = 4201
+
+    [Eth.Miner]
+    GasCeil = 42000000
+    GasPrice = 2200000000 # 2.2 Gwei
+
+    [Node]
+    DataDir = "/data/execution_data"
+
+    [Node.P2P]
+    BootstrapNodes = [{{ .Values.configmap.geth.BootstrapNodes | join "," }}]
+    BootstrapNodesV5 = []
+
+    StaticNodes = []
+    TrustedNodes = []
+
+    NoDiscovery = false
+    DiscAddr = ""
+    EnableMsgEvents = false
+
+  prysm.yaml: |
+    chain-config-file: '/data/network-configs/config.yaml'
+    genesis-state: '/data/network-configs/{{ .Values.env.GENESIS }}.ssz'
+    jwt-secret: '/data/execution_data/geth/jwtsecret'
+    wallet-dir: '/data/wallet/prysm'
+    wallet-password-file: '/var/run/secrets/WALLET_PASSWORD'
+    suggested-fee-recipient: {{ .Values.configmap.prysm.suggestedFeeRecipient | squote }}
+
+    checkpoint-sync-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
+    genesis-beacon-api-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
+
+    min-sync-peers: 0
+    monitoring-host: '0.0.0.0'
+    grpc-gateway-host: '0.0.0.0'
+    rpc-host: '0.0.0.0'
+    p2p-host-ip: '0.0.0.0'
+    p2p-max-peers: 250
+    subscribe-all-subnets: true
+    minimum-peers-per-subnet: 0
+    block-batch-limit: 512
+    block-batch-limit-burst-factor: 10
+    accept-terms-of-use: true
+
+    bootstrap-node:
+      {{- range .Values.configmap.prysm.bootstrapNodes }}
+      - {{ . | squote }}
+      {{- end }}

@@ -1,0 +1,9 @@
+fullnameOverride: orchestrator
+
+env:
+  ORACLES_URLS: http://oracle-0.oracle:4000,http://oracle-1.oracle:4000
+
+secrets:
+  ORCHESTRATOR_PRIVATE_KEY: leequid
+
+probes: null

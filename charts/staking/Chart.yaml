@@ -1,0 +1,6 @@
+apiVersion: v2
+name: staking
+description: Leequid Staking chart with Geth, Prysm and Lukso
+type: application
+version: 1.0.0
+appVersion: 1.0.0
