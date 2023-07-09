@@ -35,6 +35,9 @@ Common labels
 */}}
 {{- define "staking.labels" -}}
 helm.sh/chart: {{ include "staking.chart" . }}
+{{ with .Values.labels }}
+  {{- toYaml . }}
+{{- end }}
 {{ include "staking.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
