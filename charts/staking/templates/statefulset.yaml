@@ -60,6 +60,7 @@ spec:
               mountPath: /var/run/secrets
       containers:
         ## EXEC:GETH
+        {{- if .Values.exec.enabled  }}
         - name: exec
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -114,8 +115,10 @@ spec:
             limits:
               memory: {{ .Values.exec.memory }}
           {{- end }}
+        {{- end }}
 
         ## CONSENSUS:PRYSM (BEACON CHAIN)
+        {{- if .Values.beacon.enabled  }}
         - name: beacon
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -143,8 +146,10 @@ spec:
             limits:
               memory: {{ .Values.beacon.memory }}
           {{- end }}
+        {{- end }}
 
         ## VALIDATOR:PRYSM
+        {{- if .Values.validator.enabled  }}
         - name: validator
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -175,6 +180,7 @@ spec:
             limits:
               memory: {{ .Values.validator.memory }}
           {{- end }}
+        {{- end }}
 
       volumes:
         - name: conf

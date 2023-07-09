@@ -14,6 +14,7 @@ env:
   ENV: prod
   BUCKET: leequid-prod-staking
   GENESIS: genesis
+  GSA_PROJECT: leequid-secret
 
 secrets:
   ETH_STATS_SECRET: leequid
@@ -22,14 +23,17 @@ init:
   image: europe-west1-docker.pkg.dev/leequid/leequid/init
 
 exec:
+  enabled: true
   image: ethereum/client-go:v1.11.6
 #  memory: 4Gi
 
 beacon:
+  enabled: false
   image: prysmaticlabs/prysm-beacon-chain:v4.0.5
 #  memory: 6Gi
 
 validator:
+  enabled: false
   image: prysmaticlabs/prysm-validator:v4.0.5
 #  memory: 4Gi
 
@@ -50,9 +54,10 @@ configmap:
       - '"enode://4cee52dc3cdc0f9466d40354c0ae038b561eff0409f01092d44d692f35797a0f3e796481c5ad1ca9afb4ea00dcceaaddbf3a79ec311221bfad3567ba347e329b@34.91.156.224:30303"'
 
 serviceAccount:
-  create: false
+  create: true
   annotations:
-    iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: reader@leequid-secret.iam.gserviceaccount.com
+#    iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
   name: ""
 
 podAnnotations: {}
