@@ -19,6 +19,7 @@ NETWORK=${NETWORK:-"mainnet"}
 BUCKET=${BUCKET:-"leequid-prod-staking"}
 ENV=${ENV:-"prod"}
 WITHDRAWAL_ADDRESS=${WITHDRAWAL_ADDRESS:-"0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900"}
+GSA_PROJECT=${GSA_PROJECT:-"leequid-secret"}
 
 echo -e ">> Create directory [leequid] and download tools [prysm + lukso-key-gen]"
 dir=$NODE_PREFIX_NAME
@@ -32,7 +33,7 @@ WALLET_PASSWORD=$(openssl rand -base64 $SECRET_LENGTH)
 echo $WALLET_PASSWORD > $dir/wallet-password.txt
 
 echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
-gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt
+gcloud secrets create --project $GSA_PROJECT ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt
 
 echo -e "\n>> Iterate over [node_count=$NODE_COUNT]"
 for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
@@ -66,7 +67,7 @@ for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
   cp $dir/wallet/direct/accounts/all-accounts.keystore.json $wallet_file
 
   echo -e "\n>> [$node_name] Save wallet json file to Google Secret [${ENV}-${NETWORK}-${node_name}-wallet-file]"
-  gcloud secrets create ${ENV}-${NETWORK}-${node_name}-wallet-file --data-file=$wallet_file
+  gcloud secrets create --project $GSA_PROJECT ${ENV}-${NETWORK}-${node_name}-wallet-file --data-file=$wallet_file
 
   rm -rf $dir/validator_keys $dir/wallet
 done
