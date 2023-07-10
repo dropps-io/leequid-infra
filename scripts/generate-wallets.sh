@@ -7,6 +7,7 @@ set -e
 # NODE_COUNT=1 bash generate-wallets.sh (node_count=1 and validator_per_node=2)
 # VALIDATOR_PER_NODE=10 bash generate-wallets.sh (node_count=2 and validator_per_node=10)
 # NODE_COUNT=10 VALIDATOR_PER_NODE=1000 bash generate-wallets.sh (node_count=10 and validator_per_node=1000)
+# NODE_COUNT=10 VALIDATOR_PER_NODE=1000 bash generate-wallets.sh (node_count=10 and validator_per_node=1000)
 ###
 
 PRYSM_VERSION=4.0.3
@@ -20,20 +21,51 @@ BUCKET=${BUCKET:-"leequid-prod-staking"}
 ENV=${ENV:-"prod"}
 WITHDRAWAL_ADDRESS=${WITHDRAWAL_ADDRESS:-"0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900"}
 GSA_PROJECT=${GSA_PROJECT:-"leequid-secret"}
+ONLINE=${ONLINE:-false}
+
+fmt="%-25s%-25s\n"
+printf "$fmt" VARIABLE VALUE
+printf "$fmt" -------- -----
+printf "$fmt" "START_INDEX" "$START_INDEX"
+printf "$fmt" "NODE_COUNT" "$NODE_COUNT"
+printf "$fmt" "VALIDATOR_PER_NODE" "$VALIDATOR_PER_NODE"
+printf "$fmt" "TOTAL_VALIDATOR (*)" "$(($NODE_COUNT*$VALIDATOR_PER_NODE))"
+printf "$fmt" "NETWORK" "$NETWORK"
+printf "$fmt" "WITHDRAWAL_ADDRESS" "$WITHDRAWAL_ADDRESS"
+printf "$fmt" "ENV" "$ENV"
+printf "$fmt" "BUCKET" "$BUCKET"
+printf "$fmt" "GSA_PROJECT" "$GSA_PROJECT"
+printf "$fmt" "SECRET_LENGTH" "$SECRET_LENGTH"
+printf "$fmt" "PRYSM_VERSION" "$PRYSM_VERSION"
+printf "$fmt" "ONLINE" "$ONLINE"
+echo "--------"
+echo -e "(*) Non-existent variable only informative.\n"
+
+read -r -p "Do you want to continue? [y/N] " response
+if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  echo "Wallet generation aborted."
+  exit 0
+fi
 
 echo -e ">> Create directory [leequid] and download tools [prysm + lukso-key-gen]"
 dir=$NODE_PREFIX_NAME
 mkdir -p $dir
-curl -Ls https://github.com/prysmaticlabs/prysm/releases/download/v$PRYSM_VERSION/validator-v$PRYSM_VERSION-linux-amd64 --output prysm-validator && chmod +x prysm-validator
-curl -LOs https://github.com/percenuage/tools-key-gen-cli/releases/download/lukso-network-pr30/lukso-key-gen-cli && chmod +x lukso-key-gen-cli
+if [ "$ONLINE" = true ]; then
+  curl -Ls https://github.com/prysmaticlabs/prysm/releases/download/v$PRYSM_VERSION/validator-v$PRYSM_VERSION-linux-amd64 \
+      --output prysm-validator && chmod +x prysm-validator
+  curl -LOs https://github.com/percenuage/tools-key-gen-cli/releases/download/lukso-network-pr30/lukso-key-gen-cli \
+      && chmod +x lukso-key-gen-cli
+fi
 
 echo -e "\n>> Generate random wallet secret [$dir/wallet-password.txt]"
-#WALLET_PASSWORD=$(</dev/urandom tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_{|}~' | head -c $SECRET_LENGTH ; echo)
 WALLET_PASSWORD=$(openssl rand -base64 $SECRET_LENGTH)
 echo $WALLET_PASSWORD > $dir/wallet-password.txt
 
-echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
-gcloud secrets create --project $GSA_PROJECT ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt
+if [ "$ONLINE" = true ]; then
+  echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
+  gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password \
+      --data-file=$dir/wallet-password.txt --project $GSA_PROJECT
+fi
 
 echo -e "\n>> Iterate over [node_count=$NODE_COUNT]"
 for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
@@ -66,8 +98,11 @@ for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
   echo -e "\n>>> [$node_name] Copy wallet json file to [$wallet_file]"
   cp $dir/wallet/direct/accounts/all-accounts.keystore.json $wallet_file
 
-  echo -e "\n>> [$node_name] Save wallet json file to Google Secret [${ENV}-${NETWORK}-${node_name}-wallet-file]"
-  gcloud secrets create --project $GSA_PROJECT ${ENV}-${NETWORK}-${node_name}-wallet-file --data-file=$wallet_file
+  if [ "$ONLINE" = true ]; then
+    echo -e "\n>>> [$node_name] Save wallet json file to Google Secret [${ENV}-${NETWORK}-${node_name}-wallet-file]"
+    gcloud secrets create ${ENV}-${NETWORK}-${node_name}-wallet-file \
+        --data-file=$wallet_file --project $GSA_PROJECT
+  fi
 
   rm -rf $dir/validator_keys $dir/wallet
 done
@@ -75,8 +110,19 @@ done
 echo -e "\n>> Merge all deposit wallet to [${NODE_PREFIX_NAME}-deposit.json]"
 jq -s 'add' $dir/*deposit.json > $deposit_all_file
 
-echo -e "\n>> Save all deposits to [gs://$BUCKET/$NETWORK/]"
-gsutil -m cp ${dir}/*deposit.json gs://$BUCKET/$NETWORK/
+if [ "$ONLINE" = true ]; then
+  echo -e "\n>> Save all deposits to [gs://$BUCKET/$NETWORK/]"
+  gsutil -m cp ${dir}/*deposit.json gs://$BUCKET/$NETWORK/
 
-echo -e "\n>> Clean all except mnemonic files"
-rm -rf $dir/*deposit* $dir/*wallet*
+  echo -e "\n>> Clean all except mnemonic files"
+  rm -rf $dir/*deposit* $dir/*wallet*
+else
+  echo -e "\n>> [Manual] How to save secrets and deposits [Replace \$INDEX by 0,1,2,3,...]"
+  echo "$ ls -l $dir"
+  echo "-------------------------------"
+  ls -l $dir
+  echo "-------------------------------"
+  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt --project $GSA_PROJECT"
+  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-\$INDEX-wallet-file --data-file=$dir/${NODE_PREFIX_NAME}-\$INDEX-wallet.json --project $GSA_PROJECT"
+  echo "$ gsutil -m cp $dir/*deposit.json gs://$BUCKET/$NETWORK/"
+fi
