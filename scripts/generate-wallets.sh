@@ -18,6 +18,7 @@ NODE_PREFIX_NAME=${NODE_PREFIX_NAME:-"leequid"}
 NETWORK=${NETWORK:-"mainnet"}
 BUCKET=${BUCKET:-"leequid-prod-staking"}
 ENV=${ENV:-"prod"}
+WITHDRAWAL_ADDRESS=${WITHDRAWAL_ADDRESS:-"0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900"}
 
 echo -e ">> Create directory [leequid] and download tools [prysm + lukso-key-gen]"
 dir=$NODE_PREFIX_NAME
@@ -46,7 +47,8 @@ for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
       --num_validators $VALIDATOR_PER_NODE \
       --keystore_password $WALLET_PASSWORD \
       --folder $dir \
-      --mnemonic_file $mnemonic_file
+      --mnemonic_file $mnemonic_file \
+      --eth1_withdrawal_address $WITHDRAWAL_ADDRESS
 
   echo -e "\n>>> [$node_name] Copy deposit to [$deposit_file]"
   chmod +w $dir/validator_keys/deposit*.json
