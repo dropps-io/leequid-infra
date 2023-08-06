@@ -10,20 +10,23 @@ data:
     set -e
 
     echo -e ">> Get network-configs from Google Storage"
-    [ ! -d "/data/network-configs" ] && gsutil -m cp -p $GSA_PROJECT -r gs://$BUCKET/$NETWORK/network-configs /data
+    [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
     echo -e "\n>> Init Geth"
     [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
 
+    {{- if .Values.validator.enabled  }}
     echo -e "\n>> Get WALLET_PASSWORD from Google Secret"
     secret_id=${ENV}-${NETWORK}-leequid-wallet-password
-    gcloud secrets versions access latest --secret $secret_id --project $GSA_PROJECT > /var/run/secrets/WALLET_PASSWORD
+    gcloud secrets versions access latest --secret $secret_id --project $GSM_PROJECT > /var/run/secrets/WALLET_PASSWORD
 
     echo -e "\n>> Get prysm wallet from Google Secret and set at /data/wallet/prysm/direct/accounts"
     mkdir -p /data/wallet/prysm/direct/accounts/
     secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
-    gcloud secrets versions access latest --secret $secret_id --project $GSA_PROJECT > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
+    gcloud secrets versions access latest --secret $secret_id --project $GSM_PROJECT > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
+    {{- end }}
 
     echo "Init Success"
+
   geth.toml: |
     [Eth]
     NetworkId = 4201
@@ -57,6 +60,8 @@ data:
     checkpoint-sync-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
     genesis-beacon-api-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
 
+    slots-per-archive-point: {{ .Values.configmap.prysm.slotsPerArchivePoint }}
+
     min-sync-peers: 0
     monitoring-host: '0.0.0.0'
     grpc-gateway-host: '0.0.0.0'
@@ -68,6 +73,7 @@ data:
     block-batch-limit: 512
     block-batch-limit-burst-factor: 10
     accept-terms-of-use: true
+    verbosity: warn
 
     bootstrap-node:
       {{- range .Values.configmap.prysm.bootstrapNodes }}

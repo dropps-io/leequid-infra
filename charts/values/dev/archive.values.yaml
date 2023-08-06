@@ -1,0 +1,23 @@
+fullnameOverride: archive
+
+replicaCount: 1
+
+env:
+  NETWORK: testnet
+  GENESIS: genesis
+
+exec:
+  memory: 2Gi
+
+beacon:
+  memory: 2Gi
+
+validator:
+  enabled: false
+
+configmap:
+  prysm:
+    slotsPerArchivePoint: 32
+
+serviceAccount:
+  create: false

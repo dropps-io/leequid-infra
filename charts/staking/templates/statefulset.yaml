@@ -127,7 +127,6 @@ spec:
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/consensus_data
-            - --verbosity=warn
           env:
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
@@ -139,6 +138,10 @@ spec:
             - name: conf
               mountPath: /configs
               readOnly: true
+          ports:
+            - name: http
+              containerPort: 3500
+              protocol: TCP
           {{- if not .Values.beacon.memory }}
           resources:
             requests:
@@ -158,7 +161,6 @@ spec:
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/validator_data
-            - --verbosity=warn
           env:
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}

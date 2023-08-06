@@ -20,7 +20,7 @@ NETWORK=${NETWORK:-"mainnet"}
 BUCKET=${BUCKET:-"leequid-prod-staking"}
 ENV=${ENV:-"prod"}
 WITHDRAWAL_ADDRESS=${WITHDRAWAL_ADDRESS:-"0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900"}
-GSA_PROJECT=${GSA_PROJECT:-"leequid-secret"}
+GSM_PROJECT=${GSM_PROJECT:-"leequid-secret"}
 ONLINE=${ONLINE:-false}
 
 fmt="%-25s%-25s\n"
@@ -34,7 +34,7 @@ printf "$fmt" "NETWORK" "$NETWORK"
 printf "$fmt" "WITHDRAWAL_ADDRESS" "$WITHDRAWAL_ADDRESS"
 printf "$fmt" "ENV" "$ENV"
 printf "$fmt" "BUCKET" "$BUCKET"
-printf "$fmt" "GSA_PROJECT" "$GSA_PROJECT"
+printf "$fmt" "GSM_PROJECT" "$GSM_PROJECT"
 printf "$fmt" "SECRET_LENGTH" "$SECRET_LENGTH"
 printf "$fmt" "PRYSM_VERSION" "$PRYSM_VERSION"
 printf "$fmt" "ONLINE" "$ONLINE"
@@ -64,7 +64,7 @@ echo $WALLET_PASSWORD > $dir/wallet-password.txt
 if [ "$ONLINE" = true ]; then
   echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
   gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password \
-      --data-file=$dir/wallet-password.txt --project $GSA_PROJECT
+      --data-file=$dir/wallet-password.txt --project $GSM_PROJECT
 fi
 
 echo -e "\n>> Iterate over [node_count=$NODE_COUNT]"
@@ -101,7 +101,7 @@ for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
   if [ "$ONLINE" = true ]; then
     echo -e "\n>>> [$node_name] Save wallet json file to Google Secret [${ENV}-${NETWORK}-${node_name}-wallet-file]"
     gcloud secrets create ${ENV}-${NETWORK}-${node_name}-wallet-file \
-        --data-file=$wallet_file --project $GSA_PROJECT
+        --data-file=$wallet_file --project $GSM_PROJECT
   fi
 
   rm -rf $dir/validator_keys $dir/wallet
@@ -122,7 +122,7 @@ else
   echo "-------------------------------"
   ls -l $dir
   echo "-------------------------------"
-  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt --project $GSA_PROJECT"
-  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-\$INDEX-wallet-file --data-file=$dir/${NODE_PREFIX_NAME}-\$INDEX-wallet.json --project $GSA_PROJECT"
+  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt --project $GSM_PROJECT"
+  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-\$INDEX-wallet-file --data-file=$dir/${NODE_PREFIX_NAME}-\$INDEX-wallet.json --project $GSM_PROJECT"
   echo "$ gsutil -m cp $dir/*deposit.json gs://$BUCKET/$NETWORK/"
 fi
