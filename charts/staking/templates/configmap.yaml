@@ -57,8 +57,10 @@ data:
     wallet-password-file: '/var/run/secrets/WALLET_PASSWORD'
     suggested-fee-recipient: {{ .Values.configmap.prysm.suggestedFeeRecipient | squote }}
 
+    {{- if .Values.validator.enabled  }}
     checkpoint-sync-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
     genesis-beacon-api-url: https://checkpoints.{{ .Values.env.NETWORK }}.lukso.network
+    {{- end }}
 
     slots-per-archive-point: {{ .Values.configmap.prysm.slotsPerArchivePoint }}
 

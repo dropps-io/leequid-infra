@@ -1,6 +1,6 @@
 fullnameOverride: archive
 
-replicaCount: 1
+replicaCount: 2
 
 env:
   NETWORK: testnet
