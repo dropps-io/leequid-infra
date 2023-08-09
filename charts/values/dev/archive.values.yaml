@@ -1,6 +1,6 @@
 fullnameOverride: archive
 
-replicaCount: 2
+replicaCount: 1
 
 env:
   NETWORK: testnet
@@ -18,6 +18,9 @@ validator:
 configmap:
   prysm:
     slotsPerArchivePoint: 32
+    verbosity: info
+  geth:
+    verbosity: 3 # info
 
 serviceAccount:
   create: false

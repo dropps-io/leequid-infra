@@ -39,7 +39,7 @@ data:
     DataDir = "/data/execution_data"
 
     [Node.P2P]
-    BootstrapNodes = [{{ .Values.configmap.geth.BootstrapNodes | join "," }}]
+    BootstrapNodes = [{{ .Values.configmap.geth.bootstrapNodes | join "," }}]
     BootstrapNodesV5 = []
 
     StaticNodes = []
@@ -75,7 +75,7 @@ data:
     block-batch-limit: 512
     block-batch-limit-burst-factor: 10
     accept-terms-of-use: true
-    verbosity: warn
+    verbosity: {{ .Values.configmap.prysm.verbosity }}
 
     bootstrap-node:
       {{- range .Values.configmap.prysm.bootstrapNodes }}

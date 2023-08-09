@@ -70,7 +70,7 @@ spec:
           args:
             - geth --config /configs/geth.toml
               --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
-              --verbosity 2
+              --verbosity {{ .Values.configmap.geth.verbosity }}
           env:
             - name: NODE_NAME
               valueFrom:
