@@ -102,6 +102,9 @@ spec:
             - name: ws
               containerPort: 8546
               protocol: TCP
+            - name: rpc
+              containerPort: 8551
+              protocol: TCP
             - name: sync
               containerPort: 30303
               protocol: TCP
@@ -142,6 +145,12 @@ spec:
             - name: http
               containerPort: 3500
               protocol: TCP
+            - name: libp2p
+              containerPort: 13000
+              protocol: TCP
+            - name: discv5
+              containerPort: 12000
+              protocol: UDP
           {{- if not .Values.beacon.memory }}
           resources:
             requests:

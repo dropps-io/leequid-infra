@@ -1,0 +1,24 @@
+{{/*apiVersion: v1*/}}
+{{/*kind: Service*/}}
+{{/*metadata:*/}}
+{{/*  name: {{ include "staking.fullname" . }}*/}}
+{{/*  labels:*/}}
+{{/*    {{- include "staking.labels" . | nindent 4 }}*/}}
+{{/*spec:*/}}
+{{/*  selector:*/}}
+{{/*    {{- include "staking.selectorLabels" . | nindent 4 }}*/}}
+{{/*  ports:*/}}
+{{/*    - name: sync*/}}
+{{/*      port: 30303*/}}
+{{/*      protocol: TCP*/}}
+{{/*    - name: discovery*/}}
+{{/*      port: 30303*/}}
+{{/*      protocol: UDP*/}}
+{{/*    - name: libp2p*/}}
+{{/*      port: 13000*/}}
+{{/*      protocol: TCP*/}}
+{{/*    - name: discv5*/}}
+{{/*      port: 12000*/}}
+{{/*      protocol: UDP*/}}
+{{/*  type: LoadBalancer*/}}
+{{/*  loadBalancerIP: "34.79.86.100"*/}}

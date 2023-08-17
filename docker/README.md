@@ -2,5 +2,5 @@
 
 Build `init.dockerfile` from root:
 ````shell
-docker build -t init -f docker/init.dockerfile .
+docker build -t europe-west1-docker.pkg.dev/leequid/leequid/init:latest -f docker/init.dockerfile .
 ````

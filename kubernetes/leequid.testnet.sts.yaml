@@ -19,7 +19,7 @@ metadata:
     chain: lukso
   annotations: {}
 spec:
-  replicas: 2
+  replicas: 1
   serviceName: leequid
   selector:
     matchLabels:
@@ -33,7 +33,7 @@ spec:
     spec:
       initContainers:
         - name: init
-          image: europe-west1-docker.pkg.dev/leequid/leequid/init
+          image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.11.6-prysm4.0.7
           command: [ "/bin/bash", "-c" ]
           args:
             - |
@@ -43,12 +43,12 @@ spec:
               [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
               [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
               
-              secret_id=${ENV}-${NETWORK}-leequid-wallet-password
-              gcloud secrets versions access latest --secret $secret_id > /var/run/secrets/WALLET_PASSWORD
+              #secret_id=${ENV}-${NETWORK}-leequid-wallet-password
+              #gcloud secrets versions access latest --secret $secret_id > /var/run/secrets/WALLET_PASSWORD
               
-              mkdir -p /data/wallet/prysm/direct/accounts/
-              secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
-              gcloud secrets versions access latest --secret $secret_id > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
+              #mkdir -p /data/wallet/prysm/direct/accounts/
+              #secret_id=${ENV}-${NETWORK}-${NODE_NAME}-wallet-file
+              #gcloud secrets versions access latest --secret $secret_id > /data/wallet/prysm/direct/accounts/all-accounts.keystore.json
               
               echo "Init Success"
           env:
@@ -122,7 +122,7 @@ spec:
 
         ## CONSENSUS:PRYSM (BEACON CHAIN)
         - name: beacon
-          image: prysmaticlabs/prysm-beacon-chain:v4.0.5
+          image: prysmaticlabs/prysm-beacon-chain:v4.0.7
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/consensus_data
@@ -138,10 +138,10 @@ spec:
 #              memory: 6Gi
 #            limits:
 #              memory: 6Gi
-
+#
         ## VALIDATOR:PRYSM
         - name: validator
-          image: prysmaticlabs/prysm-validator:v4.0.5
+          image: prysmaticlabs/prysm-validator:v4.0.7
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/validator_data
@@ -235,11 +235,12 @@ data:
     p2p-max-peers: 250
     subscribe-all-subnets: true
     minimum-peers-per-subnet: 0
+    contract-deployment-block: 0
     block-batch-limit: 512
     block-batch-limit-burst-factor: 10
     accept-terms-of-use: true
     
-    bootstrap-node: ['enr:-MK4QHfHBBWZqSIxumgMmdC3zd7QyJD2shEXBhSKbay3aYwdAHrhb3lksHStJPk1tLoFOPaU4ELtaahRGUUpfm5tmhCGAYfiNvG0h2F0dG5ldHOIAAAAAAAAAACEZXRoMpBWKoojQgEABCoAAAAAAAAAgmlkgnY0gmlwhCKNxNSJc2VjcDI1NmsxoQOLhdJYX4WgjYXPw6GpCkuxnNWvM0KE_aeYzek95q2f-IhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A','enr:-MK4QFMyHkysTsF5G_3RkLlbpTKoaUGvIFEvarfJzDbp3vG1e7CN3lFiv_qgmzgGlzvIlqwylyuf-cPoujbazf12lFWGAYfiNzAwh2F0dG5ldHOIAAAAAAAAAACEZXRoMpBWKoojQgEABCoAAAAAAAAAgmlkgnY0gmlwhCJbnOCJc2VjcDI1NmsxoQNJVMzZTEVTxnbB09WzQkNxasPyQSb8XPLQT0LlExuVNIhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A']
+    boostrap-node: ['enr:-MK4QPAebhGrV0IdXCaVQ33cL-5oySUvBXPkXZTHhCDrqMOtITlhab5B6PL9hfQY5NuRF5ctLcSFhHMCdLT4RWxxo-SGAYiVi7DIh2F0dG5ldHOIAAAAAAAAAACEZXRoMpCvClM1QgEABP__________gmlkgnY0gmlwhCKNxNSJc2VjcDI1NmsxoQISdsDnr_lxpAXRQmeOu-F_eAtxypZI4ctFavqdagbka4hzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A','enr:-MK4QMEZyb5vA6A4664OJNbdRF7QQHtSMISOqU9CF8qcdB7BBjX0HsQY92roqS-0n1wTyiuCFT0weAIE7FkukdnjL0GGAYli9q2wh2F0dG5ldHOIAAAAAAAAAACEZXRoMpCvClM1QgEABP__________gmlkgnY0gmlwhCJbnOCJc2VjcDI1NmsxoQJvUBwASZv0klLo0Zz51eb_LCQx-lNrNPp-lLULQBTpfYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A']
 
 #---
 #kind: Service
