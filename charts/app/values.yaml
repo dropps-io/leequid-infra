@@ -18,7 +18,7 @@ imagePullSecrets: []
 
 env:
   PORT: "{{ .Values.service.port }}"
-  RPC_URL: https://rpc.testnet.lukso.network
+  RPC_URLS: http://archive-0.archive:8545
 
 secrets: {}
 
@@ -91,3 +91,31 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+redis:
+  enabled: false
+  fullnameOverride: redis
+
+  image:
+    tag: 7.2.0-debian-11-r0
+
+  auth:
+    enabled: false
+
+  master:
+    persistence: &redis-size
+      size: 1Gi
+    resources: &redis-resources
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 256Mi
+
+  replica:
+    replicaCount: 0
+    persistence: *redis-size
+    resources: *redis-resources
+
+  metrics:
+    enabled: true

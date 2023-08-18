@@ -1,13 +1,27 @@
 fullnameOverride: oracle
 
-replicaCount: 2
+replicaCount: 1
 
 statefulset: true
 
 env:
-  GCP_BUCKET_NAME: leequid-prod-lukso
+  NODE_ENV: testnet
+#  NETWORK: testnet
+#  NODE_ENV: production
+  GCP_BUCKET_NAME: leequid-prod-staking
   GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
-  CONSENSUS_API: https://explorer.consensus.testnet.lukso.network/api/v1
+  BEACON_API: http://archive-0.archive:3500
+  IPFS_GATEWAY: https://red-hushed-lynx-866.mypinata.cloud/ipfs/
+  REDIS_PORT: 6379
+  REDIS_HOST: redis-headless
+#  REDIS_URI: redis://redis-headless:6379/1
 
 secrets:
   ORACLE_PRIVATE_KEY: leequid
+  PINATA_API_KEY: leequid
+  PINATA_API_KEY_SECRET: leequid
+  INFURA_IPFS_API_KEY: leequid
+  INFURA_IPFS_KEY_SECRET: leequid
+
+redis:
+  enabled: true
