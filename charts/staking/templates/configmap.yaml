@@ -40,11 +40,12 @@ data:
     IPCPath = ""
     HTTPHost = "0.0.0.0"
     HTTPModules = ["net", "web3", "eth"]
+    HTTPCors = ["*"]
+    HTTPVirtualHosts = ["*"]
 
     [Node.P2P]
     BootstrapNodes = [{{ .Values.configmap.geth.bootstrapNodes | join "," }}]
     BootstrapNodesV5 = []
-
     StaticNodes = []
     TrustedNodes = []
 
