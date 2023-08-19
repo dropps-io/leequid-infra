@@ -33,10 +33,13 @@ data:
 
     [Eth.Miner]
     GasCeil = 42000000
-    GasPrice = 2200000000 # 2.2 Gwei
+    GasPrice = 4200000000 # 4.2 Gwei
 
     [Node]
     DataDir = "/data/execution_data"
+    IPCPath = ""
+    HTTPHost = "0.0.0.0"
+    HTTPModules = ["net", "web3", "eth"]
 
     [Node.P2P]
     BootstrapNodes = [{{ .Values.configmap.geth.bootstrapNodes | join "," }}]
@@ -45,9 +48,9 @@ data:
     StaticNodes = []
     TrustedNodes = []
 
-    NoDiscovery = false
-    DiscAddr = ""
-    EnableMsgEvents = false
+    [Metrics]
+    Enabled = false
+    HTTP = "0.0.0.0"
 
   prysm.yaml: |
     chain-config-file: '/data/network-configs/config.yaml'

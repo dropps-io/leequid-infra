@@ -17,8 +17,9 @@ imagePullSecrets: []
 #args: {}
 
 env:
+  NODE_ENV: production
   PORT: "{{ .Values.service.port }}"
-  RPC_URLS: http://archive-0.archive:8545
+  ARCHIVE_NODE_HOSTS: archive-0.archive
 
 secrets: {}
 

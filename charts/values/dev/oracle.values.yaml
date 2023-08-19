@@ -5,16 +5,19 @@ replicaCount: 1
 statefulset: true
 
 env:
-  NODE_ENV: testnet
-#  NETWORK: testnet
-#  NODE_ENV: production
   GCP_BUCKET_NAME: leequid-prod-staking
   GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
-  BEACON_API: http://archive-0.archive:3500
-  IPFS_GATEWAY: https://red-hushed-lynx-866.mypinata.cloud/ipfs/
-  REDIS_PORT: 6379
-  REDIS_HOST: redis-headless
-#  REDIS_URI: redis://redis-headless:6379/1
+  IPFS_GATEWAYS: https://2eff.lukso.dev/ipfs/,https://red-hushed-lynx-866.mypinata.cloud/ipfs/,https://ipfs.io/ipfs/,https://dropps.infura-ipfs.io/ipfs/
+#  IPFS_GATEWAYS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
+  REDIS_URI: redis://redis-headless:6379/1
+  CONTRACT_ORACLES: 0x3fbda838D30354c9eCed17b1568f11Bba7dc7F20
+  CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe
+  CONTRACT_POOL: 0xC0bEee1133e332039dE494E51B02a7Cf8bDf37A9
+  CONTRACT_SLYX: 0x66712679875B99Cc73f567Fe63C564299D09812B
+  CONTRACT_REWARDS: 0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900
+  CONTRACT_MERKLE_DISTRIBUTOR: 0x66899DE87d70BDd02Fd87CD8090bD8827A8ACe31
+  CONTRACT_SWAP_V1: 0x35C2014a1FE708b50ac152642EfB6CBf86874DCD
+  OPERATOR_ADDRESS: 0xD692Ba892a902810a2EE3fA41C1D8DcD652D47Ab
 
 secrets:
   ORACLE_PRIVATE_KEY: leequid
