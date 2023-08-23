@@ -18,6 +18,4 @@
   - Secret Manager
   - Cloud Nat + Public IP (egress only)
 - Docker Image (for InitContainer)
-    - `leequid-infra/docker/init-container`
-    - `leequid-infra/scripts/lukso-key-geb-cli` (https://github.com/percenuage/tools-key-gen-cli)
-    - Github PR: https://github.com/lukso-network/tools-key-gen-cli/pull/30
+    - `leequid-infra/docker/init.dockerfile`
