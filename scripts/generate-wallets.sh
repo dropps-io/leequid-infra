@@ -10,11 +10,14 @@ set -e
 # NODE_COUNT=10 VALIDATOR_PER_NODE=1000 bash generate-wallets.sh (node_count=10 and validator_per_node=1000)
 ###
 
-PRYSM_VERSION=4.0.3
+PRYSM_VERSION=4.0.7
 SECRET_LENGTH=32
 START_INDEX=${START_INDEX:-0}
 VALIDATOR_PER_NODE=${VALIDATOR_PER_NODE:-2}
 NODE_COUNT=${NODE_COUNT:-2}
+SHAMIR_SHARES_COUNT=${SHAMIR_SHARES_COUNT:-7}
+SHAMIR_SHARES_THRESHOLD=${SHAMIR_SHARES_THRESHOLD:-4}
+PUBLIC_KEYS_PATH=${PUBLIC_KEYS_PATH:-"./public-keys"}
 NODE_PREFIX_NAME=${NODE_PREFIX_NAME:-"leequid"}
 NETWORK=${NETWORK:-"mainnet"}
 BUCKET=${BUCKET:-"leequid-prod-staking"}
@@ -29,6 +32,9 @@ printf "$fmt" -------- -----
 printf "$fmt" "START_INDEX" "$START_INDEX"
 printf "$fmt" "NODE_COUNT" "$NODE_COUNT"
 printf "$fmt" "VALIDATOR_PER_NODE" "$VALIDATOR_PER_NODE"
+printf "$fmt" "SHAMIR_SHARES_COUNT" "$SHAMIR_SHARES_COUNT"
+printf "$fmt" "SHAMIR SHARES THRESHOLD" "$SHAMIR_SHARES_THRESHOLD"
+printf "$fmt" "PUBLIC KEYS PATH" "$PUBLIC_KEYS_PATH"
 printf "$fmt" "TOTAL_VALIDATOR (*)" "$(($NODE_COUNT*$VALIDATOR_PER_NODE))"
 printf "$fmt" "NETWORK" "$NETWORK"
 printf "$fmt" "WITHDRAWAL_ADDRESS" "$WITHDRAWAL_ADDRESS"
@@ -61,6 +67,10 @@ echo -e "\n>> Generate random wallet secret [$dir/wallet-password.txt]"
 WALLET_PASSWORD=$(openssl rand -base64 $SECRET_LENGTH)
 echo $WALLET_PASSWORD > $dir/wallet-password.txt
 
+echo -e "\n>> Generate random accounts secret [$dir/accounts-password.txt]"
+ACCOUNTS_PASSWORD=$(openssl rand -base64 $SECRET_LENGTH)
+echo $ACCOUNTS_PASSWORD > $dir/accounts-password.txt
+
 if [ "$ONLINE" = true ]; then
   echo -e "\n>> Save wallet password to Google Secret [${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password]"
   gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password \
@@ -71,31 +81,38 @@ echo -e "\n>> Iterate over [node_count=$NODE_COUNT]"
 for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
   node_name=${NODE_PREFIX_NAME}-${i}
   mnemonic_file=${dir}/${node_name}-mnemonic
-  wallet_file=${dir}/${node_name}-wallet.json
-  deposit_file=${dir}/${node_name}-deposit.json
+  wallet_file=${dir}/wallets/${node_name}-wallet.json
+  deposit_file=${dir}/deposits/${node_name}-deposit.json
   deposit_all_file=${dir}/${NODE_PREFIX_NAME}-deposit.json
 
   echo -e "\n>>> [$node_name] Generate keystore and mnemonic [num_validators=$VALIDATOR_PER_NODE] using lukso-key-gen-cli"
   ./lukso-key-gen-cli --language English new-mnemonic --mnemonic_language English --chain lukso \
       --num_validators $VALIDATOR_PER_NODE \
-      --keystore_password $WALLET_PASSWORD \
+      --keystore_password $ACCOUNTS_PASSWORD \
       --folder $dir \
       --mnemonic_file $mnemonic_file \
       --eth1_withdrawal_address $WITHDRAWAL_ADDRESS
 
   echo -e "\n>>> [$node_name] Copy deposit to [$deposit_file]"
+
+  # Create the destination directory if it doesn't exist
+  mkdir -p $(dirname $deposit_file)
+
   chmod +w $dir/validator_keys/deposit*.json
   cp $dir/validator_keys/deposit*.json $deposit_file
+
 
   echo -e "\n>>> [$node_name] Generate wallet [$dir/wallet] using prysm-validator"
   ./prysm-validator accounts import \
     --keys-dir=$dir/validator_keys \
     --wallet-dir=$dir/wallet \
     --wallet-password-file=$dir/wallet-password.txt \
-    --account-password-file=$dir/wallet-password.txt \
+    --account-password-file=$dir/accounts-password.txt \
     --accept-terms-of-use
 
   echo -e "\n>>> [$node_name] Copy wallet json file to [$wallet_file]"
+
+  mkdir -p $(dirname "$wallet_file")
   cp $dir/wallet/direct/accounts/all-accounts.keystore.json $wallet_file
 
   if [ "$ONLINE" = true ]; then
@@ -104,11 +121,24 @@ for (( i=$START_INDEX; i<$(($NODE_COUNT+$START_INDEX)); i++ )); do
         --data-file=$wallet_file --project $GSM_PROJECT
   fi
 
+  # If it's the first node, then override, for the rest, no
+  overwrite=""
+  if [ $i -eq $START_INDEX ]; then
+    overwrite="--overwrite"
+  fi
+
+  # Deconstruct the mnemonic seed
+  ./leequid-cli deconstruct --seed=$mnemonic_file --n=$SHAMIR_SHARES_COUNT --t=$SHAMIR_SHARES_THRESHOLD --output=$dir/shares $overwrite
+
+  rm $mnemonic_file
   rm -rf $dir/validator_keys $dir/wallet
 done
 
+echo -e "\n>> Encrypting all seeds shares for the shareholders"
+./leequid-cli encrypt-shares --pubkeys="./public-keys" --shares=$dir/shares
+
 echo -e "\n>> Merge all deposit wallet to [${NODE_PREFIX_NAME}-deposit.json]"
-jq -s 'add' $dir/*deposit.json > $deposit_all_file
+jq -s 'add' $dir/deposits/*deposit.json > $deposit_all_file
 
 if [ "$ONLINE" = true ]; then
   echo -e "\n>> Save all deposits to [gs://$BUCKET/$NETWORK/]"
