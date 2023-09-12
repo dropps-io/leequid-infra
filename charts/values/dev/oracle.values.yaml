@@ -6,7 +6,7 @@ statefulset: true
 
 env:
   GCP_BUCKET_NAME: leequid-prod-staking
-#  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json ## TODO: dans le code
+#  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json ## TODO: update leequid-back
   GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
   REDIS_URI: redis://redis-headless:6379
