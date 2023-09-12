@@ -6,11 +6,10 @@ statefulset: true
 
 env:
   GCP_BUCKET_NAME: leequid-prod-staking
-#  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json
+#  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json ## TODO: dans le code
   GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
-  IPFS_GATEWAYS: https://2eff.lukso.dev/ipfs/,https://red-hushed-lynx-866.mypinata.cloud/ipfs/,https://ipfs.io/ipfs/,https://dropps.infura-ipfs.io/ipfs/
-#  IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
-  REDIS_URI: redis://redis-headless:6379/1
+  IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
+  REDIS_URI: redis://redis-headless:6379
   CONTRACT_ORACLES: 0x3fbda838D30354c9eCed17b1568f11Bba7dc7F20
   CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe
   CONTRACT_POOL: 0xC0bEee1133e332039dE494E51B02a7Cf8bDf37A9
