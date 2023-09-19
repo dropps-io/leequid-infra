@@ -5,9 +5,9 @@ replicaCount: 1
 statefulset: true
 
 env:
-  GCP_BUCKET_NAME: leequid-prod-staking
-#  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json ## TODO: update leequid-back
-  GCP_BUCKET_DEPOSIT_DATA_PATH: testnet/deposits
+  BUCKET_NAME: leequid-prod-staking
+#  BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json # TODO: Wait for merge PR + move from deposits to enable
+  BUCKET_DEPOSIT_DATA_PATH: testnet/deposits/deposit-data.json
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
   REDIS_URI: redis://redis-headless:6379
   CONTRACT_ORACLES: 0x3fbda838D30354c9eCed17b1568f11Bba7dc7F20
