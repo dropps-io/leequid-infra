@@ -6,8 +6,7 @@ statefulset: true
 
 env:
   BUCKET_NAME: leequid-prod-staking
-#  BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json # TODO: Wait for merge PR + move from deposits to enable
-  BUCKET_DEPOSIT_DATA_PATH: testnet/deposits/deposit-data.json
+  BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit.json
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,dropps.infura-ipfs.io
   REDIS_URI: redis://redis-headless:6379
   CONTRACT_ORACLES: 0x3fbda838D30354c9eCed17b1568f11Bba7dc7F20
@@ -16,7 +15,7 @@ env:
   CONTRACT_SLYX: 0x66712679875B99Cc73f567Fe63C564299D09812B
   CONTRACT_REWARDS: 0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900
   CONTRACT_MERKLE_DISTRIBUTOR: 0x66899DE87d70BDd02Fd87CD8090bD8827A8ACe31
-  LIQUIDITY_POOLS: 0x35C2014a1FE708b50ac152642EfB6CBf86874DCD
+  LIQUIDITY_POOLS: 0xB38afE026f9D4637b37515Ae8D7B19Ee774c9DCE
   OPERATOR_ADDRESS: 0xD692Ba892a902810a2EE3fA41C1D8DcD652D47Ab
   DEBUG: true
 
