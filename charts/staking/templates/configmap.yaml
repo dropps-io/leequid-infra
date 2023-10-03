@@ -9,10 +9,17 @@ data:
     #!/bin/bash
     set -e
 
-    echo -e ">> Get network-configs from Google Storage"
-    [ ! -d "/data/network-configs" ] && gsutil -m cp -r gs://$BUCKET/$NETWORK/network-configs /data
+    echo -e ">> Get network-configs from Github"
+    if [ ! -d "/data/network-configs" ]; then
+      dir="/data/network-configs"
+      url="https://raw.githubusercontent.com/lukso-network/network-configs/main/$NETWORK/shared"
+      mkdir $dir
+      curl -L $url/config.yaml -o $dir/config.yaml
+      curl -L $url/${GENESIS}.json -o $dir/${GENESIS}.json
+      curl -L $url/${GENESIS}.ssz -o $dir/${GENESIS}.ssz
+    fi
     echo -e "\n>> Init Geth"
-    [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/genesis.json
+    [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/${GENESIS}.json
 
     {{- if .Values.validator.enabled  }}
     echo -e "\n>> Get WALLET_PASSWORD from Google Secret"
