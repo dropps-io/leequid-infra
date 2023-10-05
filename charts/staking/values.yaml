@@ -10,7 +10,7 @@ imagePullSecrets: []
 env:
   NETWORK: testnet
   ENV: dev
-  BUCKET: leequid-dev-staking
+  BUCKET_NAME: leequid-dev-staking
   GENESIS: genesis
   GSM_PROJECT: leequid-secret
 
