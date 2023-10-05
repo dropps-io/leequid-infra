@@ -1,0 +1,33 @@
+# https://external-secrets.io/v0.9.5/provider/google-secrets-manager/
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: gcpsm
+spec:
+  provider:
+    gcpsm:
+      projectID: leequid
+      auth:
+        workloadIdentity:
+          clusterLocation: europe-west1-c
+          clusterName: leequid-dev
+          serviceAccountRef:
+            name: default
+            namespace: main
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: gcpsm
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: gcpsm
+  target:
+    name: gcpsm
+    creationPolicy: Owner
+  data:
+    - secretKey: ORACLE_PRIVATE_KEY
+      remoteRef:
+        key: dev-testnet-oracle-private-key
