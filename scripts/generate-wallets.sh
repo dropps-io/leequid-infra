@@ -153,6 +153,6 @@ else
   ls -l $dir
   echo "-------------------------------"
   echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt --project $GSM_PROJECT"
-  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-\$INDEX-wallet-file --data-file=$dir/${NODE_PREFIX_NAME}-\$INDEX-wallet.json --project $GSM_PROJECT"
+  echo "$ gsutil cp $dir/*wallet.json gs://${GSM_PROJECT}-${ENV}-wallets/${NETWORK}/"
   echo "$ gsutil -m cp $dir/*deposit.json gs://$BUCKET_NAME/$NETWORK/"
 fi
