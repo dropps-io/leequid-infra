@@ -55,10 +55,9 @@ configmap:
     verbosity: 2 # warn
 
 serviceAccount:
-  create: true
+  create: false
   annotations:
-    iam.gke.io/gcp-service-account: reader@leequid-secret.iam.gserviceaccount.com
-#    iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
   name: ""
 
 podAnnotations: {}
