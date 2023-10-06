@@ -6,11 +6,8 @@ env:
   NETWORK: testnet
   GENESIS: genesis
 
-#exec:
-#  memory: 2Gi
-
-#beacon:
-#  memory: 2Gi
+volume:
+  size: 100Gi
 
 validator:
   enabled: false

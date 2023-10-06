@@ -103,6 +103,9 @@ redis:
   auth:
     enabled: false
 
+  global:
+    storageClass: premium-rwo
+
   master:
     persistence: &redis-size
       size: 1Gi

@@ -10,3 +10,7 @@ helm delete nginx -n dev
 
 ./scripts/deploy.sh
 ````
+
+## Addons
+
+- https://external-secrets.io/v0.9.5/introduction/getting-started/
