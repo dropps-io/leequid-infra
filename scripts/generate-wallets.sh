@@ -20,7 +20,7 @@ SHAMIR_SHARES_THRESHOLD=${SHAMIR_SHARES_THRESHOLD:-4}
 PUBLIC_KEYS_PATH=${PUBLIC_KEYS_PATH:-"./public-keys"}
 NODE_PREFIX_NAME=${NODE_PREFIX_NAME:-"leequid"}
 NETWORK=${NETWORK:-"mainnet"}
-BUCKET=${BUCKET:-"leequid-prod-staking"}
+BUCKET_NAME=${BUCKET_NAME:-"leequid-prod-staking"}
 ENV=${ENV:-"prod"}
 WITHDRAWAL_ADDRESS=${WITHDRAWAL_ADDRESS:-"0xAED7cD8d3105F4d6B4dDF99f619dCB2a26D0a900"}
 GSM_PROJECT=${GSM_PROJECT:-"leequid-secret"}
@@ -39,7 +39,7 @@ printf "$fmt" "TOTAL_VALIDATOR (*)" "$(($NODE_COUNT*$VALIDATOR_PER_NODE))"
 printf "$fmt" "NETWORK" "$NETWORK"
 printf "$fmt" "WITHDRAWAL_ADDRESS" "$WITHDRAWAL_ADDRESS"
 printf "$fmt" "ENV" "$ENV"
-printf "$fmt" "BUCKET" "$BUCKET"
+printf "$fmt" "BUCKET_NAME" "$BUCKET_NAME"
 printf "$fmt" "GSM_PROJECT" "$GSM_PROJECT"
 printf "$fmt" "SECRET_LENGTH" "$SECRET_LENGTH"
 printf "$fmt" "PRYSM_VERSION" "$PRYSM_VERSION"
@@ -141,8 +141,8 @@ echo -e "\n>> Merge all deposit wallet to [${NODE_PREFIX_NAME}-deposit.json]"
 jq -s 'add' $dir/deposits/*deposit.json > $deposit_all_file
 
 if [ "$ONLINE" = true ]; then
-  echo -e "\n>> Save all deposits to [gs://$BUCKET/$NETWORK/]"
-  gsutil -m cp ${dir}/*deposit.json gs://$BUCKET/$NETWORK/
+  echo -e "\n>> Save all deposits to [gs://$BUCKET_NAME/$NETWORK/]"
+  gsutil -m cp ${dir}/*deposit.json gs://$BUCKET_NAME/$NETWORK/
 
   echo -e "\n>> Clean all except mnemonic files"
   rm -rf $dir/*deposit* $dir/*wallet*
@@ -153,6 +153,6 @@ else
   ls -l $dir
   echo "-------------------------------"
   echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-wallet-password --data-file=$dir/wallet-password.txt --project $GSM_PROJECT"
-  echo "$ gcloud secrets create ${ENV}-${NETWORK}-${NODE_PREFIX_NAME}-\$INDEX-wallet-file --data-file=$dir/${NODE_PREFIX_NAME}-\$INDEX-wallet.json --project $GSM_PROJECT"
-  echo "$ gsutil -m cp $dir/*deposit.json gs://$BUCKET/$NETWORK/"
+  echo "$ gsutil cp $dir/*wallet.json gs://${GSM_PROJECT}-${ENV}-wallets/${NETWORK}/"
+  echo "$ gsutil -m cp $dir/*deposit.json gs://$BUCKET_NAME/$NETWORK/"
 fi

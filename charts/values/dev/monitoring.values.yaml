@@ -8,5 +8,4 @@ env:
   TWILIO_SENDER_ID: ""
 
 secrets:
-  ORACLE_PRIVATE_KEY: gcpsm
   TWILIO_SECRET: leequid
