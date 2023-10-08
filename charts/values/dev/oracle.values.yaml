@@ -21,7 +21,6 @@ env:
 secrets:
   ORACLE_PRIVATE_KEY: gcpsm
   PINATA_API_KEY: leequid
-  PINATA_API_KEY_SECRET: leequid
   INFURA_IPFS_API_KEY: leequid
   INFURA_IPFS_KEY_SECRET: leequid
 
