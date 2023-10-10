@@ -11,7 +11,7 @@ spec:
         workloadIdentity:
           clusterProjectID: leequid
           clusterLocation: europe-west1-c
-          clusterName: leequid-dev
+          clusterName: leequid-prod
           serviceAccountRef:
             name: default
             namespace: main
