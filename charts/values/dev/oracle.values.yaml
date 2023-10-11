@@ -20,7 +20,7 @@ env:
   DEBUG: true
 
 secrets:
-  ORACLE_PRIVATE_KEY: gcpsm
+  ORACLE_PRIVATE_KEY: leequid
   PINATA_API_KEY: leequid
   INFURA_IPFS_API_KEY: leequid
   INFURA_IPFS_KEY_SECRET: leequid
