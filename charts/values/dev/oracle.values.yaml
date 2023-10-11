@@ -9,7 +9,7 @@ env:
   NETWORK: testnet
   GSM_PROJECT: leequid-secret
   BUCKET_NAME: leequid-dev-staking
-  BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit-data.json
+  BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit-pubkeys.json
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
   REDIS_URI: redis://redis-headless:6379
   CONTRACT_ORACLES: 0xF19C33415bbe11f0BEba58F099e1f875b8E273cC
