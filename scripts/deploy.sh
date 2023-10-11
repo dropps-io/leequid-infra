@@ -1,18 +1,56 @@
 #!/bin/bash
 
-### example: deploy app nginx -n dev --dry-run
+### example: deploy -c app -a nginx -e dev
 
-ENV=dev
+# Init option flags
+env="dev"
+chart="staking"
+dir="leequid-infra/charts"
+namespace="main"
+dryRun="false"
 
-CHART=${1}
-APP=${2}
-ARGS=${@:3}
+usage() {
+  echo "Usage: $0 [-a <app>] [-e <dev|prod>] [-c <staking|app>] [-d <dir>] [-n <namespace>] [-D <dry-run>]" 1>&2; exit 1;
+}
 
-dir=leequid-infra/charts
+while getopts ":e:c:a:d:n:D" o; do
+    case "${o}" in
+        e)
+            env=${OPTARG}
+            #((env == "dev" || env == "prod")) || usage
+            ;;
+        c)
+            chart=${OPTARG}
+            ;;
+        a)
+            app=${OPTARG}
+            ;;
+        d)
+            dir=${OPTARG}
+            ;;
+        n)
+            namespace=${OPTARG}
+            ;;
+        n)
+            namespace=${OPTARG}
+            ;;
+        D)
+            dryRun="true"
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
 
-kubectl config use-context gke_leequid_europe-west1-c_leequid-$ENV
+if [[ -z "$app" ]]; then
+    echo "Option -a (app) must be defined."
+    usage
+    exit 1
+fi
 
-helm upgrade -n main --install $APP $dir/$CHART \
-  -f $dir/values/$ENV/$APP.values.yaml \
-  $ARGS
 
+kubectl config use-context gke_leequid_europe-west1-c_leequid-$env
+
+helm upgrade -n $namespace --install $app $dir/$chart -f $dir/values/$env/$app.values.yaml --dry-run=$dryRun
