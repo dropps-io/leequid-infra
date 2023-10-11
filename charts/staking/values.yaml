@@ -11,8 +11,8 @@ env:
   NETWORK: testnet
   ENV: dev
   BUCKET_NAME: leequid-dev-staking
-  GENESIS: genesis
   GSM_PROJECT: leequid-secret
+  GENESIS: genesis
 
 secrets:
   ETH_STATS_SECRET: leequid
