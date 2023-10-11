@@ -30,6 +30,39 @@ spec:
       serviceAccountName: {{ include "app.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.init.enabled }}
+      initContainers:
+        - name: init
+          image: {{ .Values.init.image }}
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - |
+              set -e
+              secret_id=${ENV}-${NETWORK}-${POD_NAME}-private-key
+              gcloud secrets versions access latest --secret $secret_id --project $GSM_PROJECT > /var/run/secrets/ORACLE_PRIVATE_KEY
+              echo "Init Success"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ tpl (quote $value) $ }}
+            {{- end }}
+            {{- range $key, $secret := .Values.secrets }}
+            {{- $secretParts := split "/" $secret }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretParts._0 }}
+                  key: {{ $secretParts._1 | default $key | quote }}
+                  optional: true
+            {{- end }}
+          volumeMounts:
+            - name: secrets
+              mountPath: /var/run/secrets
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -74,6 +107,15 @@ spec:
             {{- toYaml .Values.probes | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.init.enabled }}
+          volumeMounts:
+            - name: secrets
+              mountPath: /var/run/secrets
+          {{- end }}
+      volumes:
+        - name: secrets
+          emptyDir: {}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

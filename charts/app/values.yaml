@@ -12,12 +12,15 @@ image:
 
 imagePullSecrets: []
 
+init: # Init secrets from GCPSM
+  enabled: false
+  image: google/cloud-sdk:434.0.0-slim
+
 #command: {}
 
 #args: {}
 
 env:
-  NODE_ENV: production
   PORT: "{{ .Values.service.port }}"
   ARCHIVE_NODE_HOSTS: archive-0.archive
 

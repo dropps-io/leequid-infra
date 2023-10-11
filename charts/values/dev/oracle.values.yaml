@@ -5,6 +5,9 @@ replicaCount: 1
 statefulset: true
 
 env:
+  ENV: dev
+  NETWORK: testnet
+  GSM_PROJECT: leequid-secret
   BUCKET_NAME: leequid-dev-staking
   BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit-data.json
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
@@ -21,10 +24,13 @@ env:
   DEBUG: true
 
 secrets:
-  ORACLE_PRIVATE_KEY: gcpsm
+  ORACLE_PRIVATE_KEY: leequid
   PINATA_API_KEY: leequid
   INFURA_IPFS_API_KEY: leequid
   INFURA_IPFS_KEY_SECRET: leequid
+
+init:
+  enabled: true
 
 redis:
   enabled: true

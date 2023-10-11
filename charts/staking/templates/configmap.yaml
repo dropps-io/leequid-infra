@@ -22,7 +22,7 @@ data:
     [ ! -d "/data/execution_data" ] && geth --datadir=/data/execution_data init /data/network-configs/${GENESIS}.json
 
     {{- if .Values.validator.enabled  }}
-    echo -e "\n>> Get WALLET_PASSWORD from Google Secret"
+    echo -e "\n>> Get WALLET_PASSWORD from Google Secret Manager"
     secret_id=${ENV}-${NETWORK}-leequid-wallet-password
     gcloud secrets versions access latest --secret $secret_id --project $GSM_PROJECT > /var/run/secrets/WALLET_PASSWORD
 
