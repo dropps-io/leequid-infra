@@ -1,0 +1,40 @@
+fullnameOverride: oracle
+
+replicaCount: 1
+
+statefulset: true
+
+env:
+  ENV: prod
+  NETWORK: mainnet
+  GSM_PROJECT: leequid-secret
+  BUCKET_NAME: leequid-prod-staking
+  BUCKET_DEPOSIT_DATA_PATH: mainnet/leequid-deposit-pubkeys.json
+  ARCHIVE_NODE_HOSTS: XXX
+  IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
+  REDIS_URI: redis://redis-headless:6379
+  CONTRACT_ORACLES: 0xF19C33415bbe11f0BEba58F099e1f875b8E273cC
+  CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe
+  CONTRACT_POOL: 0x2DA7f24256Aa22606249196F94Ea14cd2C1F4454
+  CONTRACT_POOL_VALIDATORS: 0x5C8BD0502C627f6adaedcfE0B9c082c03D9438fA
+  CONTRACT_SLYX: 0x8cd1F4dE5549C7036Bb2676E276EA2a740613930
+  CONTRACT_REWARDS: 0x64D13f27ad46513F5C13B1225956D1DC03b55E0a
+  CONTRACT_MERKLE_DISTRIBUTOR: 0x6686C4cd55274e524b4C7CF5322c2b2675d3337A
+  LIQUIDITY_POOLS: 0xcd742e32aa35b4ef704aa28abd986204d4c3f640
+  OPERATOR_ADDRESS: 0xD692Ba892a902810a2EE3fA41C1D8DcD652D47Ab
+  ORACLE_PRIVATE_KEY: /var/run/secrets/ORACLE_PRIVATE_KEY
+  DEBUG: true
+
+secrets:
+  PINATA_API_KEY: leequid
+  INFURA_IPFS_API_KEY: leequid
+  INFURA_IPFS_KEY_SECRET: leequid
+
+init:
+  enabled: true
+
+redis:
+  enabled: true
+  replica:
+    replicaCount: 1
+

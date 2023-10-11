@@ -57,7 +57,7 @@ configmap:
 serviceAccount:
   create: false
   annotations:
-    iam.gke.io/gcp-service-account: leequid-prod@leequid.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: leequid-dev@leequid.iam.gserviceaccount.com
   name: ""
 
 podAnnotations: {}

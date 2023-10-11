@@ -1,23 +1,20 @@
+fullnameOverride: archive
+
 replicaCount: 1
 
 env:
   NETWORK: mainnet
   GENESIS: genesis_42
 
-exec:
-  memory: 4Gi
-
-beacon:
-  memory: 6Gi
+volume:
+  size: 100Gi
 
 validator:
-  memory: 4Gi
-
-volume:
-  size: 50Gi
+  enabled: false
 
 configmap:
   prysm:
+    slotsPerArchivePoint: 32
     suggested-fee-recipient: 0xD692Ba892a902810a2EE3fA41C1D8DcD652D47Ab
     bootstrap-node:
       - enr:-MK4QJ-Bt9HATy4GQawPbDDTArtnt_phuWiVVoWKhS7-DSNjVzmGKBI9xKzpyRtpeCWd3qA9737FTdkKGDgtHfF4N-6GAYlzJCVRh2F0dG5ldHOIAAAAAAAAAACEZXRoMpA2ulfbQgAABP__________gmlkgnY0gmlwhCKTScGJc2VjcDI1NmsxoQJNpNUERqKhA8eDDC4tovG3a59NXVOW16JDFAWXoFFTEYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A

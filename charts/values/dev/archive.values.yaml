@@ -15,6 +15,3 @@ validator:
 configmap:
   prysm:
     slotsPerArchivePoint: 32
-
-serviceAccount:
-  create: false
