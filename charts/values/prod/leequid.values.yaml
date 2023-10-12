@@ -1,6 +1,8 @@
 replicaCount: 1
 
 env:
+  ENV: prod
+  BUCKET_NAME: leequid-prod-staking
   NETWORK: mainnet
   GENESIS: genesis_42
 
