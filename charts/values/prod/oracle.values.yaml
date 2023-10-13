@@ -1,6 +1,6 @@
 fullnameOverride: oracle
 
-replicaCount: 1
+replicaCount: 4
 
 statefulset: true
 
