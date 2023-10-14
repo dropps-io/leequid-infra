@@ -34,7 +34,7 @@ data:
 
   geth.toml: |
     [Eth]
-    NetworkId = 4201
+    NetworkId = {{ .Values.configmap.geth.networkId }}
 
     [Eth.Miner]
     GasCeil = 42000000
