@@ -2,6 +2,8 @@ fullnameOverride: leequid
 
 replicaCount: 1
 
+updateStrategy: OnDelete
+
 env:
   ENV: prod
   BUCKET_NAME: leequid-prod-staking
