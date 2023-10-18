@@ -20,7 +20,7 @@ env:
 #  memory: 4Gi
 
 volume:
-  size: 50Gi
+  size: 20Gi
 
 configmap:
   prysm:
