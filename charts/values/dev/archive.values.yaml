@@ -14,4 +14,4 @@ validator:
 
 configmap:
   prysm:
-    slotsPerArchivePoint: 32
+    slotsPerArchivePoint: 1024
