@@ -1,6 +1,6 @@
 fullnameOverride: leequid
 
-replicaCount: 1
+replicaCount: 5
 
 updateStrategy: OnDelete
 
@@ -10,14 +10,14 @@ env:
   NETWORK: mainnet
   GENESIS: genesis_42
 
-exec:
-  memory: 4Gi
-
-beacon:
-  memory: 6Gi
-
-validator:
-  memory: 4Gi
+#exec:
+#  memory: 4Gi
+#
+#beacon:
+#  memory: 6Gi
+#
+#validator:
+#  memory: 4Gi
 
 volume:
   size: 50Gi

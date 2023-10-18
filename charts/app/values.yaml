@@ -118,6 +118,7 @@ redis:
         memory: 256Mi
       limits:
         memory: 256Mi
+    disableCommands: []
 
   replica:
     replicaCount: 0
