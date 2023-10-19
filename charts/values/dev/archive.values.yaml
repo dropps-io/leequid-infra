@@ -7,7 +7,7 @@ env:
   GENESIS: genesis
 
 volume:
-  size: 50Gi
+  size: 20Gi
 
 validator:
   enabled: false
