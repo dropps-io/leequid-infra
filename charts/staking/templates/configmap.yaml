@@ -49,6 +49,7 @@ data:
     HTTPVirtualHosts = ["*"]
 
     [Node.P2P]
+    MaxPeers = 20
     BootstrapNodes = [{{ .Values.configmap.geth.bootstrapNodes | join "," }}]
     BootstrapNodesV5 = []
     StaticNodes = []
@@ -76,7 +77,7 @@ data:
     grpc-gateway-host: '0.0.0.0'
     rpc-host: '0.0.0.0'
     p2p-host-ip: '0.0.0.0'
-    p2p-max-peers: 250
+    p2p-max-peers: 10
     subscribe-all-subnets: true
     minimum-peers-per-subnet: 0
     block-batch-limit: 512

@@ -2,25 +2,26 @@
 
 ### example: deploy -c app -a nginx -e dev
 
+# Init vars
+stakingChart=("archive" "leequid")
+appChart=("oracle" "orchestrator" "monitoring")
+chart="app"
+
 # Init option flags
 env="dev"
-chart="staking"
 dir="leequid-infra/charts"
 namespace="main"
 dryRun="false"
 
 usage() {
-  echo "Usage: $0 [-a <app>] [-e <dev|prod>] [-c <staking|app>] [-d <dir>] [-n <namespace>] [-D <dry-run>]" 1>&2; exit 1;
+  echo "Usage: $0 [-a <app>] [-e <dev|prod>] [-d <dir>] [-n <namespace>] [-D <dry-run>]" 1>&2; exit 1;
 }
 
-while getopts ":e:c:a:d:n:D" o; do
+while getopts ":e:a:d:n:D" o; do
     case "${o}" in
         e)
             env=${OPTARG}
             #((env == "dev" || env == "prod")) || usage
-            ;;
-        c)
-            chart=${OPTARG}
             ;;
         a)
             app=${OPTARG}
@@ -50,6 +51,12 @@ if [[ -z "$app" ]]; then
     exit 1
 fi
 
+if [[ "${stakingChart[*]}" =~ "$app" ]]; then
+  chart="staking"
+elif [[ ! "${appChart[*]}" =~ "$app" ]] ; then
+  echo "This app [$app] does not exist!"
+  exit 1
+fi
 
 kubectl config use-context gke_leequid_europe-west1-c_leequid-$env
 
