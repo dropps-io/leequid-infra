@@ -1,0 +1,16 @@
+grafanaHost: 'metrics.mainnet.leequid.io'
+grafanaStaticIPName: 'grafana-prod'
+grafana:
+  persistence:
+    type: pvc
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    # annotations: {}
+    finalizers:
+      - kubernetes.io/pvc-protection
+    # selectorLabels: {}
+    # subPath: ""
+    # existingClaim:
+    # extraPvcLabels: {}

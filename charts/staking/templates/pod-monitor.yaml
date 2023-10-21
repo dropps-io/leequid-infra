@@ -1,0 +1,22 @@
+{{- if .Values.validator.enabled  }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: leequid-monitoring
+  namespace: main
+  labels:
+    prometheus: main
+spec:
+  namespaceSelector:
+    matchNames:
+      - main
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: staking
+      app.kubernetes.io/instance: leequid
+  podMetricsEndpoints:
+    - port: beacon-metrics
+      path: /metrics
+    - port: val-metrics
+      path: /metrics
+{{- end}}
