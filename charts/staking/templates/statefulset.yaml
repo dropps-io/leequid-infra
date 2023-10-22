@@ -113,6 +113,8 @@ spec:
             - name: discovery
               containerPort: 30303
               protocol: UDP
+            - name: exec-metrics
+              containerPort: 6060
           {{- if .Values.exec.memory }}
           resources:
             requests:
@@ -153,6 +155,8 @@ spec:
             - name: discv5
               containerPort: 12000
               protocol: UDP
+            - name: beacon-metrics
+              containerPort: 8080
           {{- if .Values.beacon.memory }}
           resources:
             requests:
@@ -186,6 +190,9 @@ spec:
             - name: secrets
               mountPath: /var/run/secrets
               readOnly: true
+          ports:
+            - name: val-metrics
+              containerPort: 8081
           {{- if .Values.validator.memory }}
           resources:
             requests:
