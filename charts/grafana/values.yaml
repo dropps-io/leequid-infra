@@ -1,5 +1,3 @@
-grafanaHost: 'metrics.testnet.leequid.io'
-grafanaStaticIPName: 'grafana-dev'
 grafana:
   persistence:
     type: pvc

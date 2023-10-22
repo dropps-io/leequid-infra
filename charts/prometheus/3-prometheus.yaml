@@ -46,7 +46,7 @@ spec:
   logLevel: info
   logFormat: logfmt
   retention: 7d
-  scrapeInterval: 15s
+  scrapeInterval: 2m
   securityContext:
     fsGroup: 0
     runAsNonRoot: false
