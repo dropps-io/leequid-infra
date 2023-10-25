@@ -1,6 +1,6 @@
 fullnameOverride: leequid
 
-replicaCount: 7
+replicaCount: 10
 
 updateStrategy: OnDelete
 
