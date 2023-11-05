@@ -1,7 +1,7 @@
 fullnameOverride: orchestrator
 
 env:
-  ARCHIVE_NODE_HOSTS: archive-0.archive,archive-1.archive,archive-2.archive,archive-3.archive
+  ARCHIVE_NODE_HOSTS: leequid-0.leequid,leequid-1.leequid,leequid-2.leequid,leequid-3.leequid
   ORACLES_URLS: oracle-0.oracle:4000,oracle-1.oracle:4000,oracle-2.oracle:4000,oracle-3.oracle:4000
   CONTRACT_ORACLES: 0x987E6dA8F94D56D5742958f99950860FA5B120cC
   OPERATOR_ADDRESS: 0x6D975E3F0C15DB1BbF987DA6aC244aBb9fAA6163
