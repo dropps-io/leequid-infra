@@ -40,6 +40,9 @@ volume:
   storageClassName: premium-rwo
   size: 20Gi
 
+monitoring:
+  enabled: true
+
 configmap:
   prysm:
     suggestedFeeRecipient: 0x9658B1Ff55597303EF2Ed963A9E8Aadb7E3E135e

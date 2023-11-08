@@ -22,7 +22,6 @@ init: # Init secrets from GCPSM
 
 env:
   PORT: "{{ .Values.service.port }}"
-  ARCHIVE_NODE_HOSTS: archive-0.archive
 
 secrets: {}
 
