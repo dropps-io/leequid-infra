@@ -17,3 +17,6 @@ validator:
 
 volume:
   size: 20Gi
+
+monitoring:
+  enabled: false
