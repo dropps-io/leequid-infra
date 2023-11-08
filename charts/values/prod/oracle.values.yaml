@@ -25,6 +25,7 @@ env:
   ORACLE_PRIVATE_KEY: /var/run/secrets/ORACLE_PRIVATE_KEY
   PROTOCOL_START_BLOCK: "953558"
   DEBUG: true
+  NODE_OPTIONS: --max-old-space-size=4096
 
 secrets:
   PINATA_API_KEY: leequid

@@ -113,7 +113,7 @@ spec:
             - name: discovery
               containerPort: 30303
               protocol: UDP
-            - name: exec-metrics
+            - name: metrics
               containerPort: 6060
           {{- if .Values.exec.memory }}
           resources:
