@@ -22,17 +22,17 @@ init:
 
 exec:
   enabled: true
-  image: ethereum/client-go:v1.11.6
+  image: ethereum/client-go:v1.13.4
 #  memory: 2Gi
 
 beacon:
   enabled: true
-  image: prysmaticlabs/prysm-beacon-chain:v4.0.7
+  image: prysmaticlabs/prysm-beacon-chain:v4.1.1
 #  memory: 8Gi
 
 validator:
   enabled: true
-  image: prysmaticlabs/prysm-validator:v4.0.7
+  image: prysmaticlabs/prysm-validator:v4.1.1
 #  memory: 4Gi
 
 volume:
