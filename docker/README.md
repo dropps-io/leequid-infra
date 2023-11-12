@@ -2,5 +2,8 @@
 
 Build `init.dockerfile` from root:
 ````shell
-docker build -t europe-west1-docker.pkg.dev/leequid/leequid/init:latest -f docker/init.dockerfile .
+GETH_VERSION=1.13.4
+PRYSM_VERSION=4.1.1
+docker build -t europe-west1-docker.pkg.dev/leequid/leequid/init:geth${GETH_VERSION}-prysm${PRYSM_VERSION} -f docker/init.dockerfile .
+docker push europe-west1-docker.pkg.dev/leequid/leequid/init:geth${GETH_VERSION}-prysm${PRYSM_VERSION}
 ````
