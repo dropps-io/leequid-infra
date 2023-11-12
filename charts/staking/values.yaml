@@ -18,21 +18,21 @@ secrets:
   ETH_STATS_SECRET: leequid
 
 init:
-  image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.13.1-prysm4.0.8
+  image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.11.6-prysm4.0.7
 
 exec:
   enabled: true
-  image: ethereum/client-go:v1.13.1
+  image: ethereum/client-go:v1.11.6
 #  memory: 2Gi
 
 beacon:
   enabled: true
-  image: prysmaticlabs/prysm-beacon-chain:v4.0.8
+  image: prysmaticlabs/prysm-beacon-chain:v4.0.7
 #  memory: 8Gi
 
 validator:
   enabled: true
-  image: prysmaticlabs/prysm-validator:v4.0.8
+  image: prysmaticlabs/prysm-validator:v4.0.7
 #  memory: 4Gi
 
 volume:
