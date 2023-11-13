@@ -20,3 +20,7 @@ volume:
 
 monitoring:
   enabled: false
+
+configmap:
+  prysm:
+    p2pHostIp: '34.22.177.170'
