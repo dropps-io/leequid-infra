@@ -24,7 +24,7 @@ volume:
 
 configmap:
   prysm:
-    p2pHostIp: '104.199.78.139'
+    p2pHostIp: 104.199.78.139
     suggested-fee-recipient: 0x9658B1Ff55597303EF2Ed963A9E8Aadb7E3E135e
     bootstrap-node:
       - enr:-MK4QJ-Bt9HATy4GQawPbDDTArtnt_phuWiVVoWKhS7-DSNjVzmGKBI9xKzpyRtpeCWd3qA9737FTdkKGDgtHfF4N-6GAYlzJCVRh2F0dG5ldHOIAAAAAAAAAACEZXRoMpA2ulfbQgAABP__________gmlkgnY0gmlwhCKTScGJc2VjcDI1NmsxoQJNpNUERqKhA8eDDC4tovG3a59NXVOW16JDFAWXoFFTEYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A
