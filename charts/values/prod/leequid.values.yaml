@@ -22,9 +22,34 @@ env:
 volume:
   size: 20Gi
 
+externalIPs:
+  - 34.79.161.30
+  - 34.76.223.199
+  - 35.187.80.88
+  - 35.187.83.175
+  - 34.38.135.160
+  - 34.38.8.81
+  - 34.76.52.12
+  - 35.240.8.46
+  - 34.140.8.162
+  - 104.155.22.226
+  - 35.205.77.147
+  - 34.38.47.14
+  - 34.76.210.94
+  - 34.38.37.62
+  - 34.79.11.83
+  - 35.205.42.31
+  - 34.38.26.56
+  - 34.77.84.49
+  - 35.205.192.5
+  - 35.240.51.153
+  - 34.140.173.239
+  - 34.38.114.1
+  - 34.77.22.27
+  - 35.233.84.2
+
 configmap:
   prysm:
-    p2pHostIp: 104.199.78.139
     suggested-fee-recipient: 0x9658B1Ff55597303EF2Ed963A9E8Aadb7E3E135e
     bootstrap-node:
       - enr:-MK4QJ-Bt9HATy4GQawPbDDTArtnt_phuWiVVoWKhS7-DSNjVzmGKBI9xKzpyRtpeCWd3qA9737FTdkKGDgtHfF4N-6GAYlzJCVRh2F0dG5ldHOIAAAAAAAAAACEZXRoMpA2ulfbQgAABP__________gmlkgnY0gmlwhCKTScGJc2VjcDI1NmsxoQJNpNUERqKhA8eDDC4tovG3a59NXVOW16JDFAWXoFFTEYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A

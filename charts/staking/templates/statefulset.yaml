@@ -134,7 +134,12 @@ spec:
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/consensus_data
+            - --p2p-host-dns=$(NODE_NAME).leequid.org
           env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
               value: {{ tpl (quote $value) $ }}

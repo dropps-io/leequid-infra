@@ -1,19 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "staking.fullname" . }}
+  name: leequid-0
   labels:
-    {{- include "staking.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
 spec:
-  type: ClusterIP
-  clusterIP: None
+  type: LoadBalancer
+  loadBalancerIP: "34.79.161.30"
   selector:
-    {{- include "staking.selectorLabels" . | nindent 4 }}
-
-  externalIPs:
-  {{- range .Values.externalIPs }}
-    - {{ . }}
-  {{- end }}
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-0
 
   ports:
     - name: exec-http
@@ -34,5 +33,3 @@ spec:
     - name: discv5
       port: 12000
       protocol: UDP
-{{/*  type: LoadBalancer*/}}
-{{/*  loadBalancerIP: "34.79.86.100"*/}}
