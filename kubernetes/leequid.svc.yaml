@@ -33,3 +33,831 @@ spec:
     - name: discv5
       port: 12000
       protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-1
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.76.223.199"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-1
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-2
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.187.80.88"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-2
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-3
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.187.83.175"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-3
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-4
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.135.160"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-4
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-5
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.8.81"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-5
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-6
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.76.52.12"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-6
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-7
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.240.8.46"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-7
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-8
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.140.8.162"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-8
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-9
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "104.155.22.226"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-9
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-10
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.205.77.147"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-10
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-11
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.47.14"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-11
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-12
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.76.210.94"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-12
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-13
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.37.62"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-13
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-14
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.79.11.83"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-14
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-15
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.205.42.31"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-15
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-16
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.26.56"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-16
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-17
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.77.84.49"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-17
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-18
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.205.192.5"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-18
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-19
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.240.51.153"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-19
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-20
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.140.173.239"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-20
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-21
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.38.114.1"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-21
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-22
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.77.22.27"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-22
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-23
+  labels:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    chain: lukso
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "35.233.84.2"
+  selector:
+    app.kubernetes.io/instance: leequid
+    app.kubernetes.io/name: staking
+    statefulset.kubernetes.io/pod-name: leequid-23
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
