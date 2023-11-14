@@ -1,19 +1,16 @@
+{{- range $index, $ip :=  .Values.externalIPs -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "staking.fullname" . }}
+  name: {{ $.Release.Name }}-{{ $index }}
   labels:
-    {{- include "staking.labels" . | nindent 4 }}
+    {{- include "staking.labels" $ | nindent 4 }}
 spec:
-  type: ClusterIP
-  clusterIP: None
+  type: LoadBalancer
+  loadBalancerIP: "{{ $ip }}"
   selector:
-    {{- include "staking.selectorLabels" . | nindent 4 }}
-
-  externalIPs:
-  {{- range .Values.externalIPs }}
-    - {{ . }}
-  {{- end }}
+    {{- include "staking.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{ $index }}
 
   ports:
     - name: exec-http
@@ -34,5 +31,5 @@ spec:
     - name: discv5
       port: 12000
       protocol: UDP
-{{/*  type: LoadBalancer*/}}
-{{/*  loadBalancerIP: "34.79.86.100"*/}}
+---
+{{- end }}
