@@ -1,3 +1,4 @@
+{{- if .Values.externalIPs }}
 {{- range $index, $ip :=  .Values.externalIPs -}}
 apiVersion: v1
 kind: Service
@@ -26,4 +27,38 @@ spec:
       port: 12000
       protocol: UDP
 ---
+{{- end }}
+
+{{- else }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "staking.fullname" . }}
+  labels:
+    {{- include "staking.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    {{- include "staking.selectorLabels" . | nindent 4 }}
+
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
+    - name: sync
+      port: 30303
+      protocol: TCP
+    - name: discovery
+      port: 30303
+      protocol: UDP
+    - name: libp2p
+      port: 13000
+      protocol: TCP
+    - name: discv5
+      port: 12000
+      protocol: UDP
 {{- end }}

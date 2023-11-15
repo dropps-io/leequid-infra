@@ -72,6 +72,7 @@ spec:
           args:
             - geth --config /configs/geth.toml
               --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
+              --nat extip:104.199.78.139
               --verbosity {{ .Values.configmap.geth.verbosity }}
           env:
             - name: NODE_NAME
@@ -134,7 +135,11 @@ spec:
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/consensus_data
+            {{- if .Values.externalIPs }}
             - --p2p-host-dns=$(NODE_NAME).leequid.org
+            {{- else }}
+            - --p2p-host-ip=0.0.0.0
+            {{- end }}
           env:
             - name: NODE_NAME
               valueFrom:
