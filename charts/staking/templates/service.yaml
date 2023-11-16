@@ -34,8 +34,7 @@ spec:
       protocol: UDP
 ---
 {{- end }}
-
-{{- else }}
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -55,16 +54,3 @@ spec:
     - name: beacon-http
       port: 3500
       protocol: TCP
-    - name: sync
-      port: 30303
-      protocol: TCP
-    - name: discovery
-      port: 30303
-      protocol: UDP
-    - name: libp2p
-      port: 13000
-      protocol: TCP
-    - name: discv5
-      port: 12000
-      protocol: UDP
-{{- end }}
