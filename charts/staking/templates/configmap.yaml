@@ -54,6 +54,9 @@ data:
     BootstrapNodesV5 = []
     StaticNodes = []
     TrustedNodes = []
+    {{- if .Values.configmap.geth.nat }}
+    NAT = {{ .Values.configmap.geth.nat }}
+    {{- end }}
 
     [Metrics]
     Enabled = false

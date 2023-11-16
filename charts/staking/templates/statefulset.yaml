@@ -72,7 +72,6 @@ spec:
           args:
             - geth --config /configs/geth.toml
               --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
-              --nat extip:104.199.78.139
               --verbosity {{ .Values.configmap.geth.verbosity }}
           env:
             - name: NODE_NAME
