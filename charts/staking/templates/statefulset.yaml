@@ -164,6 +164,9 @@ spec:
             - name: discv5
               containerPort: 12000
               protocol: UDP
+            - name: p2p
+              containerPort: 33415
+              protocol: UDP
             - name: beacon-metrics
               containerPort: 8080
           {{- if .Values.beacon.memory }}
