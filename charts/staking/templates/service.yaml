@@ -21,31 +21,31 @@ spec:
     - name: libp2p
       port: 13000
       protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ $.Release.Name }}-{{ $index }}-udp
-  labels:
-    {{- include "staking.labels" $ | nindent 4 }}
-    protocol: udp
-spec:
-  type: LoadBalancer
-  loadBalancerIP: "{{ $ip }}"
-  selector:
-    {{- include "staking.selectorLabels" $ | nindent 4 }}
-    statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{ $index }}
+{{/*---*/}}
+{{/*apiVersion: v1*/}}
+{{/*kind: Service*/}}
+{{/*metadata:*/}}
+{{/*  name: {{ $.Release.Name }}-{{ $index }}-udp*/}}
+{{/*  labels:*/}}
+{{/*    {{- include "staking.labels" $ | nindent 4 }}*/}}
+{{/*    protocol: udp*/}}
+{{/*spec:*/}}
+{{/*  type: LoadBalancer*/}}
+{{/*  loadBalancerIP: "{{ $ip }}"*/}}
+{{/*  selector:*/}}
+{{/*    {{- include "staking.selectorLabels" $ | nindent 4 }}*/}}
+{{/*    statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{ $index }}*/}}
 
-  ports:
-    - name: discovery
-      port: 30303
-      protocol: UDP
-    - name: discv5
-      port: 12000
-      protocol: UDP
-    - name: p2p
-      port: 33415
-      protocol: UDP
+{{/*  ports:*/}}
+{{/*    - name: discovery*/}}
+{{/*      port: 30303*/}}
+{{/*      protocol: UDP*/}}
+{{/*    - name: discv5*/}}
+{{/*      port: 12000*/}}
+{{/*      protocol: UDP*/}}
+{{/*    - name: p2p*/}}
+{{/*      port: 33415*/}}
+{{/*      protocol: UDP*/}}
 ---
 {{- end }}
 {{- end }}
