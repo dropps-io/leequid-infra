@@ -72,7 +72,6 @@ spec:
           args:
             - geth --config /configs/geth.toml
               --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
-              --nat extip:34.79.161.30
               --verbosity {{ .Values.configmap.geth.verbosity }}
           env:
             - name: NODE_NAME
@@ -164,6 +163,9 @@ spec:
               protocol: TCP
             - name: discv5
               containerPort: 12000
+              protocol: UDP
+            - name: p2p
+              containerPort: 33415
               protocol: UDP
             - name: beacon-metrics
               containerPort: 8080
