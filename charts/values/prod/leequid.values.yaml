@@ -8,7 +8,7 @@ env:
   ENV: prod
   BUCKET_NAME: leequid-prod-staking
   NETWORK: mainnet
-  GENESIS: genesis_42
+  GENESIS: genesis
 
 #exec:
 #  memory: 4Gi
