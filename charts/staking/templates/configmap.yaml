@@ -78,6 +78,7 @@ data:
     grpc-gateway-host: '0.0.0.0'
     rpc-host: '0.0.0.0'
     p2p-max-peers: 250
+    p2p-udp-port: 12000
     subscribe-all-subnets: true
     minimum-peers-per-subnet: 0
     block-batch-limit: 512
