@@ -135,6 +135,7 @@ spec:
           args:
             - --config-file=/configs/prysm.yaml
             - --datadir=/data/consensus_data
+{{/*            - --p2p-host-ip=34.79.161.30*/}}
             {{- if .Values.externalIPs }}
             - --p2p-host-dns=$(NODE_NAME).leequid.org
             {{- else }}
