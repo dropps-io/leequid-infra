@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: europe-west1-docker.pkg.dev/leequid/leequid/leequid-xxx
   tag: latest
-#  pullPolicy: Always #Never|Always|IfNotPresent
+  pullPolicy: Always #Never|Always|IfNotPresent
 
 imagePullSecrets: []
 
@@ -27,12 +27,12 @@ exec:
 
 beacon:
   enabled: true
-  image: prysmaticlabs/prysm-beacon-chain:v4.0.8
+  image: europe-west1-docker.pkg.dev/leequid/leequid/prysm:v4.0.8
 #  memory: 8Gi
 
 validator:
   enabled: true
-  image: prysmaticlabs/prysm-validator:v4.0.8
+  image: europe-west1-docker.pkg.dev/leequid/leequid/prysm:v4.0.8
 #  memory: 4Gi
 
 volume:

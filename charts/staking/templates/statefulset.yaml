@@ -31,6 +31,7 @@ spec:
       initContainers:
         - name: init
           image: {{ .Values.init.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [ "/bin/bash", "-c" ]
           args:
             - /configs/init.sh
@@ -70,10 +71,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [ "/bin/sh", "-c" ]
           args:
-            - geth --config /configs/geth.toml
-              --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@stats.execution.$(NETWORK).lukso.network"
-{{/*              --nat extip:34.79.161.30*/}}
-              --verbosity {{ .Values.configmap.geth.verbosity }}
+            - /configs/exec.sh
           env:
             - name: NODE_NAME
               valueFrom:
@@ -132,15 +130,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.beacon.image }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "/bin/sh", "-c" ]
           args:
-            - --config-file=/configs/prysm.yaml
-            - --datadir=/data/consensus_data
-{{/*            - --p2p-host-ip=34.79.161.30*/}}
-            {{- if .Values.externalIPs }}
-            - --p2p-host-dns=$(NODE_NAME).leequid.org
-            {{- else }}
-            - --p2p-host-ip=0.0.0.0
-            {{- end }}
+            - /configs/beacon.sh
           env:
             - name: NODE_NAME
               valueFrom:
@@ -184,9 +176,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.validator.image }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "/bin/sh", "-c" ]
           args:
-            - --config-file=/configs/prysm.yaml
-            - --datadir=/data/validator_data
+            - /configs/validator.sh
           env:
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}

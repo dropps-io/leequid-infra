@@ -9,10 +9,12 @@ data:
     #!/bin/bash
     set -e
 
+    {{- if .Values.externalIPs }}
     echo -e ">> Get external IP from GCP"
     EXTERNAL_IP=$(dig +short ${NODE_NAME}.leequid.org)
     echo "EXTERNAL_IP=$EXTERNAL_IP" > /data/init.env
     cat /data/init.env
+    {{- end }}
 
     echo -e ">> Get network-configs from Github"
     if [ ! -d "/data/network-configs" ]; then
@@ -37,6 +39,38 @@ data:
 
     echo "Init Success"
 
+  exec.sh: |
+    #!/bin/sh
+    set -e
+
+    [ -f "/data/init.env" ] && source /data/init.env
+    geth --config /configs/geth.toml \
+      --ethstats "dropps-${NODE_NAME}:${ETH_STATS_SECRET}@stats.execution.${NETWORK}.lukso.network" \
+      {{- if .Values.externalIPs }}
+      --nat extip:$EXTERNAL_IP \
+      {{- end }}
+      --verbosity {{ .Values.configmap.geth.verbosity }}
+
+  beacon.sh: |
+    #!/bin/bash
+    set -e
+
+    [ -f "/data/init.env" ] && source /data/init.env
+    beacon-chain \
+      --config-file=/configs/prysm.yaml \
+      --datadir=/data/consensus_data \
+      {{- if .Values.externalIPs }}
+      --p2p-host-ip=$EXTERNAL_IP
+      {{- end }}
+
+  validator.sh: |
+    #!/bin/bash
+    set -e
+
+    validator \
+      --config-file=/configs/prysm.yaml \
+      --datadir=/data/validator_data
+
   geth.toml: |
     [Eth]
     NetworkId = {{ .Values.configmap.geth.networkId }}
@@ -59,7 +93,6 @@ data:
     BootstrapNodesV5 = []
     StaticNodes = []
     TrustedNodes = []
-    #NAT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 104, 199, 78, 139]
 
     [Metrics]
     Enabled = false
@@ -82,6 +115,7 @@ data:
     monitoring-host: '0.0.0.0'
     grpc-gateway-host: '0.0.0.0'
     rpc-host: '0.0.0.0'
+    p2p-host-ip: '0.0.0.0'
     p2p-max-peers: 250
     p2p-udp-port: 12000
     subscribe-all-subnets: true
