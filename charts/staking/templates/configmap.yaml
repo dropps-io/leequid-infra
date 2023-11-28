@@ -9,6 +9,11 @@ data:
     #!/bin/bash
     set -e
 
+    echo -e ">> Get external IP from GCP"
+    EXTERNAL_IP=$(dig +short ${NODE_NAME}.leequid.org)
+    echo "EXTERNAL_IP=$EXTERNAL_IP" > /data/init.env
+    cat /data/init.env
+
     echo -e ">> Get network-configs from Github"
     if [ ! -d "/data/network-configs" ]; then
       dir="/data/network-configs"
