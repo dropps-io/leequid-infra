@@ -13,6 +13,7 @@ beacon:
   memory: 3Gi
 
 validator:
+  enabled: false
   memory: 2Gi
 
 volume:

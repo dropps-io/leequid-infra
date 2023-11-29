@@ -12,7 +12,7 @@ data:
     {{- if .Values.externalIPs }}
     echo -e ">> Get external IP from GCP"
     EXTERNAL_IP=$(dig +short ${NODE_NAME}.leequid.org)
-    echo "EXTERNAL_IP=$EXTERNAL_IP" > /data/init.env
+    echo "export EXTERNAL_IP=$EXTERNAL_IP" > /data/init.env
     cat /data/init.env
     {{- end }}
 
@@ -58,10 +58,10 @@ data:
     [ -f "/data/init.env" ] && source /data/init.env
     beacon-chain \
       --config-file=/configs/prysm.yaml \
-      --datadir=/data/consensus_data \
       {{- if .Values.externalIPs }}
-      --p2p-host-ip=$EXTERNAL_IP
+      --p2p-host-ip=$EXTERNAL_IP \
       {{- end }}
+      --datadir=/data/consensus_data
 
   validator.sh: |
     #!/bin/bash
