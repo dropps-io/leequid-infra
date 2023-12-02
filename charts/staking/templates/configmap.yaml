@@ -88,7 +88,7 @@ data:
     HTTPVirtualHosts = ["*"]
 
     [Node.P2P]
-    MaxPeers = 100
+    MaxPeers = 50
     BootstrapNodes = [{{ .Values.configmap.geth.bootstrapNodes | join "," }}]
     BootstrapNodesV5 = []
     StaticNodes = []
