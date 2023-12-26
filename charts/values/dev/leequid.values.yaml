@@ -6,15 +6,16 @@ env:
   NETWORK: testnet
   GENESIS: genesis
 
-exec:
-  memory: 2Gi
+#exec:
+#  memory: 2Gi
 
 beacon:
-  memory: 3Gi
+#  memory: 3Gi
+  image: europe-west1-docker.pkg.dev/leequid/leequid/prysm:v4.0.8
 
 validator:
   enabled: false
-  memory: 2Gi
+#  memory: 2Gi
 
 volume:
   size: 20Gi
