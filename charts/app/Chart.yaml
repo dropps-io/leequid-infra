@@ -5,7 +5,7 @@ type: application
 version: 1.0.0
 appVersion: 1.0.0
 dependencies:
-  - name: redis
-    version: 17.15.5
+  - name: postgresql
+    version: 13.2.29
     repository: https://charts.bitnami.com/bitnami
-    condition: redis.enabled
+    condition: postgresql.enabled

@@ -95,34 +95,14 @@ tolerations: []
 
 affinity: {}
 
-redis:
+postgresql:
   enabled: false
-  fullnameOverride: redis
-
-  image:
-    tag: 7.2.0-debian-11-r0
+  fullnameOverride: postgresql
 
   auth:
-    enabled: false
+    username: leequid
+    password: leequid
 
-  global:
-    storageClass: premium-rwo
-
-  master:
-    persistence: &redis-size
+  primary:
+    persistence:
       size: 1Gi
-    resources: &redis-resources
-      requests:
-        cpu: 50m
-        memory: 256Mi
-      limits:
-        memory: 256Mi
-    disableCommands: []
-
-  replica:
-    replicaCount: 0
-    persistence: *redis-size
-    resources: *redis-resources
-
-  metrics:
-    enabled: true

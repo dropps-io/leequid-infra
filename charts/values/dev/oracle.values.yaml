@@ -4,6 +4,9 @@ replicaCount: 1
 
 statefulset: true
 
+image:
+  tag: dev
+
 env:
   ENV: dev
   NETWORK: testnet
@@ -12,7 +15,7 @@ env:
   BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit-pubkeys.json
   ARCHIVE_NODE_HOSTS: leequid-0.leequid
   IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
-  REDIS_URI: redis://redis-headless:6379
+  ORACLE_DB_CONNECTION_STRING: postgresql://leequid:leequid@postgresql:5432/oracle_db
   CONTRACT_ORACLES: 0xF19C33415bbe11f0BEba58F099e1f875b8E273cC
   CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe
   CONTRACT_POOL: 0x2DA7f24256Aa22606249196F94Ea14cd2C1F4454
@@ -34,6 +37,6 @@ secrets:
 init:
   enabled: true
 
-redis:
+postgresql:
   enabled: true
 
