@@ -100,9 +100,17 @@ postgresql:
   fullnameOverride: postgresql
 
   auth:
-    username: leequid
-    password: leequid
+    database: ops
+    username: ops
+    existingSecret: postgresql
+
+  image:
+    tag: 16.1.0-debian-11-r19
 
   primary:
     persistence:
       size: 1Gi
+      storageClass: premium-rwo
+
+  metrics:
+    enabled: true
