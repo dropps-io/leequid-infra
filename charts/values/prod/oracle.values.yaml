@@ -14,7 +14,7 @@ env:
   BUCKET_NAME: leequid-prod-staking
   BUCKET_DEPOSIT_DATA_PATH: mainnet/leequid-deposit-pubkeys.json
   ARCHIVE_NODE_HOSTS: leequid-0.leequid,leequid-1.leequid,leequid-2.leequid,leequid-3.leequid
-  IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
+  IPFS_GATEWAY_HOSTS: ipfs.io,red-hushed-lynx-866.mypinata.cloud,leequid.infura-ipfs.io
   ORACLE_DB_CONNECTION_STRING: postgresql://leequid:leequid@postgresql:5432/oracle_db
   CONTRACT_ORACLES: 0x987E6dA8F94D56D5742958f99950860FA5B120cC
   CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe

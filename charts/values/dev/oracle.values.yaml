@@ -14,7 +14,7 @@ env:
   BUCKET_NAME: leequid-dev-staking
   BUCKET_DEPOSIT_DATA_PATH: testnet/leequid-deposit-pubkeys.json
   ARCHIVE_NODE_HOSTS: leequid-0.leequid
-  IPFS_GATEWAY_HOSTS: 2eff.lukso.dev,red-hushed-lynx-866.mypinata.cloud,ipfs.io,leequid.infura-ipfs.io
+  IPFS_GATEWAY_HOSTS: ipfs.io,red-hushed-lynx-866.mypinata.cloud,leequid.infura-ipfs.io
   POSTGRES_USER: ops
   POSTGRES_DB: oracle
   POSTGRES_HOST: postgresql-hl
