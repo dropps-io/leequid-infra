@@ -5,7 +5,7 @@ replicaCount: 1
 statefulset: true
 
 image:
-  tag: dev
+  tag: main
 
 env:
   ENV: dev
