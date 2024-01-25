@@ -15,7 +15,8 @@ env:
   BUCKET_DEPOSIT_DATA_PATH: mainnet/leequid-deposit-pubkeys.json
   ARCHIVE_NODE_HOSTS: leequid-0.leequid,leequid-1.leequid,leequid-2.leequid,leequid-3.leequid
   IPFS_GATEWAY_HOSTS: ipfs.io,red-hushed-lynx-866.mypinata.cloud,leequid.infura-ipfs.io
-  ORACLE_DB_CONNECTION_STRING: postgresql://leequid:leequid@postgresql:5432/oracle_db
+  POSTGRES_USER: ops
+  POSTGRES_HOST: postgresql
   CONTRACT_ORACLES: 0x987E6dA8F94D56D5742958f99950860FA5B120cC
   CONTRACT_DEPOSIT: 0xCAfe00000000000000000000000000000000CAfe
   CONTRACT_POOL: 0x7B6D1201A9e98B16EFef58CC42afFeb8D805d120
@@ -36,6 +37,7 @@ secrets:
   PINATA_API_KEY: leequid
   INFURA_IPFS_API_KEY: leequid
   INFURA_IPFS_KEY_SECRET: leequid
+  POSTGRES_PASSWORD: postgresql/password
 
 init:
   enabled: true
