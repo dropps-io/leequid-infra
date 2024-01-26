@@ -30,7 +30,6 @@ env:
   PROTOCOL_START_BLOCK: "953558"
   LEEQUID_OPERATOR_ADDRESS: 0x6d975e3f0c15db1bbf987da6ac244abb9faa6163
   NODE_OPERATOR_FEE: "50"
-  DEBUG: true
   NODE_OPTIONS: --max-old-space-size=4096
 
 secrets:
@@ -45,3 +44,6 @@ init:
 postgresql:
   enabled: true
 
+resources:
+  requests:
+    cpu: 500m
