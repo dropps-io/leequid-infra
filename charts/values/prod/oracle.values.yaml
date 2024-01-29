@@ -4,9 +4,6 @@ replicaCount: 4
 
 statefulset: true
 
-image:
-  tag: v1.4.0
-
 env:
   ENV: prod
   NETWORK: mainnet

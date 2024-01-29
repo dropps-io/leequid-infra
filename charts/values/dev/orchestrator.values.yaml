@@ -1,5 +1,8 @@
 fullnameOverride: orchestrator
 
+image:
+  tag: main
+
 env:
   ARCHIVE_NODE_HOSTS: leequid-0.leequid
   ORACLES_URLS: oracle-0.oracle:4000
