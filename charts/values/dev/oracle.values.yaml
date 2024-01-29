@@ -4,9 +4,6 @@ replicaCount: 1
 
 statefulset: true
 
-image:
-  tag: main
-
 env:
   ENV: dev
   NETWORK: testnet
