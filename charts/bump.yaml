@@ -1,0 +1,67 @@
+name: Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      chart:
+        description: Selected chart to bump
+        required: true
+        default: patch
+        type: app
+        options:
+          - app
+          - staking
+      chart-version:
+        description: Chart version
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      app-version:
+        description: App version
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  bump:
+    name: Bump chart
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+#      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions [Bot]"
+
+      - name: Get next version
+        id: semvers
+        uses: WyriHaximus/github-action-next-semvers@v1
+        with:
+          version: v1.4.0
+
+
+      - name: Bump
+        run: |
+          echo ${{ steps.semvers.outputs.patch }}
+          echo ${{ steps.semvers.outputs.minor }}
+          echo ${{ steps.semvers.outputs.v_patch }}
+          echo ${{ steps.semvers.outputs.v_minor }}
+#
+#      - name: Push changes
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          branch: ${{ github.ref }}
+#          tags: true
