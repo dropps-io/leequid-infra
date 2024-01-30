@@ -3,6 +3,7 @@ fullnameOverride: orchestrator
 env:
   ARCHIVE_NODE_HOSTS: leequid-0.leequid
   ORACLES_URLS: oracle-0.oracle:4000
+  IPFS_GATEWAY_HOSTS: ipfs.io,red-hushed-lynx-866.mypinata.cloud,leequid.infura-ipfs.io
   CONTRACT_ORACLES: 0xF19C33415bbe11f0BEba58F099e1f875b8E273cC
   CONTRACT_SLYX: 0x8cd1F4dE5549C7036Bb2676E276EA2a740613930
   CONTRACT_REWARDS: 0x64D13f27ad46513F5C13B1225956D1DC03b55E0a

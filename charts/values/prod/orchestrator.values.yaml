@@ -6,6 +6,7 @@ image:
 env:
   ARCHIVE_NODE_HOSTS: leequid-0.leequid,leequid-1.leequid,leequid-2.leequid,leequid-3.leequid
   ORACLES_URLS: oracle-0.oracle:4000,oracle-1.oracle:4000,oracle-2.oracle:4000,oracle-3.oracle:4000
+  IPFS_GATEWAY_HOSTS: ipfs.io,red-hushed-lynx-866.mypinata.cloud,leequid.infura-ipfs.io
   CONTRACT_ORACLES: 0x987E6dA8F94D56D5742958f99950860FA5B120cC
   CONTRACT_SLYX: 0xDF9124ee97d7a8eB8fe845b6C6eE8a8D75B55a57
   CONTRACT_REWARDS: 0x5D48F7FC221ABcAC5386c374eF723a56AD03D4B4
