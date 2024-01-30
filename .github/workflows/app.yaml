@@ -1,0 +1,45 @@
+name: App
+
+on:
+  push:
+    branches: [master]
+    paths: [charts/app/**]
+
+jobs:
+  bump:
+    name: Bump chart
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+
+      - name: Get current chart version
+        id: version
+        run: echo "chart=$(yq '.version' charts/app/Chart.yaml)" >> $GITHUB_OUTPUT
+
+      - name: Get next version
+        id: semvers
+        uses: WyriHaximus/github-action-next-semvers@v1
+        with:
+          version: ${{ steps.version.outputs.chart }}
+
+      - name: Set next patch chart version
+        if: ${{ contains(github.event.head_commit.message, 'fix') }}
+        run: yq -i '.version = "${{ steps.semvers.outputs.patch }}"' charts/app/Chart.yaml
+
+      - name: Set next minor chart version
+        if: ${{ ! contains(github.event.head_commit.message, 'fix') }}
+        run: yq -i '.version = "${{ steps.semvers.outputs.minor }}"' charts/app/Chart.yaml
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions [Bot]"
+          git add *
+          git commit -m "bump(charts/app): $(yq '.version' charts/app/Chart.yaml)"
+          git push origin

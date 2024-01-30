@@ -7,7 +7,6 @@ statefulset: false
 
 image:
   repository: europe-west1-docker.pkg.dev/leequid/leequid/back
-  tag: main
   pullPolicy: Always #Never|Always|IfNotPresent
 
 imagePullSecrets: []
