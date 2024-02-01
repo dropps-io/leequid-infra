@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leequid-0-public
+  namespace: main
+  labels:
+    app.kubernetes.io/instance: leequid
+    protocol: tcp
+
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "34.79.161.30"
+  selector:
+    statefulset.kubernetes.io/pod-name: leequid-0
+#  loadBalancerSourceRanges:
+#    - 34.140.235.227/32
+  ports:
+    - name: exec-http
+      port: 8545
+      protocol: TCP
+    - name: beacon-http
+      port: 3500
+      protocol: TCP
