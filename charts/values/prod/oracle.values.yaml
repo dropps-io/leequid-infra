@@ -5,7 +5,7 @@ replicaCount: 4
 statefulset: true
 
 image:
-  tag: v1.5.4
+  tag: v1.5.5
 
 env:
   ENV: prod
@@ -27,7 +27,7 @@ env:
   LIQUIDITY_POOLS: 0xb9ddae8a609167472549f7a68425c47dba3515ec
   ORACLE_PRIVATE_KEY: /var/run/secrets/ORACLE_PRIVATE_KEY
   PROTOCOL_START_BLOCK: "953558"
-  LEEQUID_OPERATOR_ADDRESS: 0x6d975e3f0c15db1bbf987da6ac244abb9faa6163
+  LEEQUID_OPERATOR_ADDRESS: 0x6D975E3F0C15DB1BbF987DA6aC244aBb9fAA6163
   NODE_OPERATOR_FEE: "50"
   NODE_OPTIONS: --max-old-space-size=4096
   DEBUG: true
