@@ -5,7 +5,7 @@ replicaCount: 4
 statefulset: true
 
 image:
-  tag: v1.5.6
+  tag: v1.5.7
 
 env:
   ENV: prod
