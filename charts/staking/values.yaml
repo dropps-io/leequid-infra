@@ -86,6 +86,10 @@ securityContext: {}
 
 nodeSelector: {}
 
-tolerations: []
+tolerations:
+  - key: app
+    value: leequid
+    operator: Equal
+    effect: NoSchedule
 
 affinity: {}
