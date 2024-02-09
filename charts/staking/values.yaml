@@ -84,7 +84,8 @@ securityContext: {}
   # runAsNonRoot: true
   # allowPrivilegeEscalation: false
 
-nodeSelector: {}
+nodeSelector:
+  cloud.google.com/gke-nodepool: main
 
 tolerations:
   - key: app
