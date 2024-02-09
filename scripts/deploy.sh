@@ -32,9 +32,6 @@ while getopts ":e:a:d:n:D" o; do
         n)
             namespace=${OPTARG}
             ;;
-        n)
-            namespace=${OPTARG}
-            ;;
         D)
             dryRun="server"
             ;;
