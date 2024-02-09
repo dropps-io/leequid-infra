@@ -38,10 +38,10 @@ spec:
   resources:
     requests:
       cpu: 500m
-      memory: 2Gi
+      memory: 4Gi
     limits:
-      cpu: 500m
-      memory: 2Gi
+#      cpu: 500m
+      memory: 4Gi
   replicas: 1
   logLevel: info
   logFormat: logfmt
