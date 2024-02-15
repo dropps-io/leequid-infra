@@ -1,7 +1,7 @@
 fullnameOverride: orchestrator
 
 image:
-  tag: v1.5.9
+  tag: v1.5.10
 
 env:
   ARCHIVE_NODE_HOSTS: leequid-0.leequid,leequid-1.leequid,leequid-2.leequid,leequid-3.leequid
