@@ -10,18 +10,6 @@ env:
   NETWORK: mainnet
   GENESIS: genesis
 
-#exec:
-#  memory: 4Gi
-#
-#beacon:
-#  memory: 6Gi
-#
-#validator:
-#  memory: 4Gi
-
-volume:
-  size: 20Gi
-
 configmap:
   prysm:
     suggested-fee-recipient: 0x9658B1Ff55597303EF2Ed963A9E8Aadb7E3E135e
