@@ -200,7 +200,7 @@ data:
     
     [Eth.Miner]
     GasCeil = 42000000
-    GasPrice = 2200000000 # 2.2 Gwei
+    GasPrice = 100000000 # 0.1 Gwei
     
     [Node]
     DataDir = "/data/execution_data"
