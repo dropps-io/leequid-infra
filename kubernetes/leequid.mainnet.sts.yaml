@@ -38,7 +38,7 @@ spec:
               mountPath: /data
 
         - name: geth-init
-          image: ethereum/client-go:v1.13.14
+          image: ethereum/client-go:v1.14.0
           command: ["/bin/sh", "-c"]
           args:
             - geth --datadir=/data/execution_data init /data/network-configs/genesis_42.json
@@ -66,7 +66,7 @@ spec:
       containers:
         ## EXEC:GETH
         - name: exec
-          image: ethereum/client-go:v1.13.14
+          image: ethereum/client-go:v1.14.0
           command: [ "/bin/sh", "-c" ]
           args:
             - geth --config /configs/geth.toml --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)"
