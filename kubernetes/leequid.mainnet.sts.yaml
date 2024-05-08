@@ -41,7 +41,7 @@ spec:
           image: ethereum/client-go:v1.14.0
           command: ["/bin/sh", "-c"]
           args:
-            - geth --datadir=/data/execution_data init /data/network-configs/genesis_42.json
+            - geth --datadir=/data/execution_data init /data/network-configs/genesis.json
           volumeMounts:
             - name: data
               mountPath: /data
@@ -209,7 +209,7 @@ data:
 
   prysm.yaml: |
     chain-config-file: '/data/network-configs/config.yaml'
-    genesis-state: '/data/network-configs/genesis_42.ssz'
+    genesis-state: '/data/network-configs/genesis.ssz'
     jwt-secret: '/data/execution_data/geth/jwtsecret'
     wallet-dir: '/data/keystores/prysm'
     wallet-password-file: '/var/run/secrets/WALLET_SECRET'
