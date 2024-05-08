@@ -33,7 +33,7 @@ spec:
     spec:
       initContainers:
         - name: init
-          image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.13.14-prysm5.0.1
+          image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.14.0-prysm5.0.1
           command: [ "/bin/bash", "-c" ]
           args:
             - |
