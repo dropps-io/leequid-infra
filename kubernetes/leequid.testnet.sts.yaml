@@ -33,7 +33,7 @@ spec:
     spec:
       initContainers:
         - name: init
-          image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.14.0-prysm5.0.1
+          image: europe-west1-docker.pkg.dev/leequid/leequid/init:geth1.13.15-prysm5.0.1
           command: [ "/bin/bash", "-c" ]
           args:
             - |
@@ -72,7 +72,7 @@ spec:
         ## EXEC:GETH
         - name: exec
 #          image: nginx
-          image: ethereum/client-go:v1.14.0
+          image: ethereum/client-go:v1.13.15
           command: [ "/bin/sh", "-c" ]
           args:
             - geth --config /configs/geth.toml --ethstats "dropps-$(NODE_NAME):$(ETH_STATS_SECRET)@$(ETH_STATS_ADDRESS)"
